@@ -11,3 +11,7 @@ security:
     token:
       secret-key: fillkieSecretKey
       expire-length: 3600000
+
+
+server:
+  port: 80
