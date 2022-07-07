@@ -1,0 +1,13 @@
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: fillkie
+
+security:
+  jwt:
+    token:
+      secret-key: fillkieSecretKey
+      expire-length: 3600000
