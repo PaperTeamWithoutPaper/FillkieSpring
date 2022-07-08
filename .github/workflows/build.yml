@@ -28,3 +28,10 @@ jobs:
       - name: Make zip file
         run: zip -qq -r ./$GITHUB_SHA.zip .
         shell: bash
+        
+      - uses: actions/upload-artifact@v2
+        name: Upload Build file to Github Artifacts
+        with:
+          name: Build Code zip file 
+          path: $GITHUB_SHA.zip
+        shell: bash
