@@ -33,4 +33,4 @@ jobs:
         name: Upload Build file to Github Artifacts
         with:
           name: Build Code zip file 
-          path: $GITHUB_SHA.zip
+          path: ./$GITHUB_SHA.zip
