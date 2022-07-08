@@ -26,17 +26,9 @@ jobs:
         shell: bash
 
       - name: Make zip file
-        run: zip -qq -r ./$GITHUB_SHA.zip .
+        run: zip -qq -r ./$GITHUB_SHA.zip ./build
         shell: bash
-        
-      - name: Find zip file
-        run: ls -lah ./*.zip
-        shell: bash
-        
-      - name: pwd file
-        run: pwd
-        shell: bash
-    
+            
       - uses: actions/upload-artifact@v2
         name: Upload Build file to Github Artifacts
         with:
