@@ -32,6 +32,10 @@ jobs:
       - name: Find zip file
         run: ls -lah ./$GITHUB_SHA.zip
         shell: bash
+        
+      - name: pwd file
+        run: pwd
+        shell: bash
     
       - uses: actions/upload-artifact@v2
         name: Upload Build file to Github Artifacts
