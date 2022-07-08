@@ -40,8 +40,8 @@ public class JwtTokenProvider {
         headers.put("typ", "JWT");
         headers.put("alg", "HS256");
 
-        Claims claims = Jwts.claims().setSubject(email);
-        claims.put("id", id);
+        Claims claims = Jwts.claims().setSubject(id);
+//        claims.put("id", id);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds); // 유효기간 계산 (지금으로부터 + 유효시간)
