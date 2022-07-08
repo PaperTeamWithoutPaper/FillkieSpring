@@ -12,10 +12,10 @@ import java.util.List;
 @Getter
 public class Team {
 
-    @Id
-    private String id;
-    private String name;
-    private List<String> users = new ArrayList<>();
-    private List<String> projects = new ArrayList<>();
+  @Id
+  private String id;
+  private String name;
+  private List<String> users = new ArrayList<>();
+  private List<String> projects = new ArrayList<>();
 
 }

@@ -21,10 +21,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private Logger logger = LoggerFactory.getLogger(UserService.class);
-    private final UserRepository userRepository;
-    private final OAuthService oauthService;
-    private final JwtTokenProvider jwtTokenProvider;
+  private Logger logger = LoggerFactory.getLogger(UserService.class);
+  private final UserRepository userRepository;
+  private final OAuthService oauthService;
+  private final JwtTokenProvider jwtTokenProvider;
 
 //    public UserService(UserRepository userRepository, OAuthService oauthService, JwtTokenProvider jwtTokenProvider) {
 //        this.userRepository = userRepository;
@@ -32,32 +32,33 @@ public class UserService {
 //        this.jwtTokenProvider = jwtTokenProvider;
 //    }
 
-    public String oauthLogin(String code) {
-        ResponseEntity<String> accessTokenResponse = oauthService.createPostRequest(code);
-        OAuthToken oAuthToken = oauthService.getAccessToken(accessTokenResponse);
-        logger.info("Access Token: {}", oAuthToken.getAccessToken());
+  public String oauthLogin(String code) {
+    ResponseEntity<String> accessTokenResponse = oauthService.createPostRequest(code);
+    OAuthToken oAuthToken = oauthService.getAccessToken(accessTokenResponse);
+    logger.info("Access Token: {}", oAuthToken.getAccessToken());
 
-        ResponseEntity<String> userInfoResponse = oauthService.createGetRequest(oAuthToken);
-        GoogleUser googleUser = oauthService.getUserInfo(userInfoResponse);
-        logger.info("Google User Name: {}", googleUser.getName());
-        logger.info("Token Response: {}", userInfoResponse.toString());
+    ResponseEntity<String> userInfoResponse = oauthService.createGetRequest(oAuthToken);
+    GoogleUser googleUser = oauthService.getUserInfo(userInfoResponse);
+    logger.info("Google User Name: {}", googleUser.getName());
+    logger.info("Token Response: {}", userInfoResponse.toString());
 
-        if (!isJoinedUser(googleUser)) {
-            signUp(googleUser, oAuthToken);
-        }
-        User user = userRepository.findByEmail(googleUser.getEmail()).orElseThrow(UserNotFoundException::new);
-        log.info("UserService Login User : {}", user.toString());
-        return jwtTokenProvider.createToken(user.getId(), user.getEmail());
+    if (!isJoinedUser(googleUser)) {
+      signUp(googleUser, oAuthToken);
     }
+    User user = userRepository.findByEmail(googleUser.getEmail())
+        .orElseThrow(UserNotFoundException::new);
+    log.info("UserService Login User : {}", user.toString());
+    return jwtTokenProvider.createToken(user.getId(), user.getEmail());
+  }
 
-    private boolean isJoinedUser(GoogleUser googleUser) {
-        Optional<User> users = userRepository.findByEmail(googleUser.getEmail()); // email로 DB 접근
-        logger.info("Joined User: {}", users);
-        return users.isPresent();
-    }
+  private boolean isJoinedUser(GoogleUser googleUser) {
+    Optional<User> users = userRepository.findByEmail(googleUser.getEmail()); // email로 DB 접근
+    logger.info("Joined User: {}", users);
+    return users.isPresent();
+  }
 
-    private void signUp(GoogleUser googleUser, OAuthToken oAuthToken) {
-        User user = googleUser.toUser(oAuthToken.getAccessToken());
-        userRepository.insert(user);
-    }
+  private void signUp(GoogleUser googleUser, OAuthToken oAuthToken) {
+    User user = googleUser.toUser(oAuthToken.getAccessToken());
+    userRepository.insert(user);
+  }
 }

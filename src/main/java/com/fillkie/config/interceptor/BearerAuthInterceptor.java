@@ -20,28 +20,30 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 @Slf4j
 public class BearerAuthInterceptor implements HandlerInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(BearerAuthInterceptor.class);
 
-    private final AuthorizationExtractor authorizationExtractor;
-    private final JwtTokenProvider jwtTokenProvider;
+  private static final Logger logger = LoggerFactory.getLogger(BearerAuthInterceptor.class);
+
+  private final AuthorizationExtractor authorizationExtractor;
+  private final JwtTokenProvider jwtTokenProvider;
 
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        logger.info(">>> interceptor.preHandle 호출");
-        String token = authorizationExtractor.extract(request, "Bearer");
-        if (token.isEmpty()) {
-            throw new TokenEmptyException();
-        }
-
-        // !!!Refresh Token으로 재발급?
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰");
-        }
-
-        String id = jwtTokenProvider.getSubject(token);
-        log.info("interceptor email : {}", id);
-        request.setAttribute("email", id);
-        return true;
+  @Override
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+      Object handler) {
+    logger.info(">>> interceptor.preHandle 호출");
+    String token = authorizationExtractor.extract(request, "Bearer");
+    if (token.isEmpty()) {
+      throw new TokenEmptyException();
     }
+
+    // !!!Refresh Token으로 재발급?
+    if (!jwtTokenProvider.validateToken(token)) {
+      throw new IllegalArgumentException("유효하지 않은 토큰");
+    }
+
+    String id = jwtTokenProvider.getSubject(token);
+    log.info("interceptor email : {}", id);
+    request.setAttribute("email", id);
+    return true;
+  }
 }

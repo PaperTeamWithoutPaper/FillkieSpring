@@ -8,9 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 public class Project {
 
-    @Id
-    private String id;
-    private String user;
-    private String directory;
+  @Id
+  private String id;
+  private String user;
+  private String directory;
 
 }

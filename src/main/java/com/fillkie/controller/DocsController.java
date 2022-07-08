@@ -19,65 +19,69 @@ import java.util.List;
 public class DocsController {
 
 
-
-
-    @GetMapping("user")
-    public ResponseEntity<? extends Data<GetMain>> getUserInfo(){
-        GetMain getMain = new GetMain();
-        return new ResponseEntity(new Data<GetMain>(getMain), HttpStatus.OK);
-    }
+  @GetMapping("user")
+  public ResponseEntity<? extends Data<GetMain>> getUserInfo() {
+    GetMain getMain = new GetMain();
+    return new ResponseEntity(new Data<GetMain>(getMain), HttpStatus.OK);
+  }
 
 //    @GetMapping("team")
 
-    // id 가져옴
-    @GetMapping("team")
-    public ResponseEntity<? extends Data<GetTeams>> getTeamList(){
-        GetTeams getTeams = new GetTeams();
-        return new ResponseEntity(new Data<GetTeams>(getTeams), HttpStatus.OK);
-    }
+  // id 가져옴
+  @GetMapping("team")
+  public ResponseEntity<? extends Data<GetTeams>> getTeamList() {
+    GetTeams getTeams = new GetTeams();
+    return new ResponseEntity(new Data<GetTeams>(getTeams), HttpStatus.OK);
+  }
 
-    @GetMapping("project")
-    public ResponseEntity<? extends Data<GetProjects>> getProjectList(){
-        GetProjects getProjects = new GetProjects();
-        return new ResponseEntity(new Data<GetProjects>(getProjects), HttpStatus.OK);
-    }
-
-
-    @GetMapping("team/{teamId}")
-    public ResponseEntity<? extends Data<GetTeamName>> getTeamName(@PathVariable("teamId") String teamId){
-
-        GetTeamName getTeamName = new GetTeamName();
-
-        return new ResponseEntity(new Data<GetTeamName>(getTeamName), HttpStatus.OK);
-    }
-
-    @PostMapping("team")
-    public String saveTeam(){
-        return "error : ";
-    }
+  @GetMapping("project")
+  public ResponseEntity<? extends Data<GetProjects>> getProjectList() {
+    GetProjects getProjects = new GetProjects();
+    return new ResponseEntity(new Data<GetProjects>(getProjects), HttpStatus.OK);
+  }
 
 
-    @AllArgsConstructor
-    static class Data<T>{
-        private T Result;
-    }
+  @GetMapping("team/{teamId}")
+  public ResponseEntity<? extends Data<GetTeamName>> getTeamName(
+      @PathVariable("teamId") String teamId) {
 
-    class GetMain{
-        String username = "‍유재원";
-        String email = "sjf471@korea.ac.kr";
-    }
+    GetTeamName getTeamName = new GetTeamName();
 
-    class GetTeams{
-        ArrayList<String> teams = new ArrayList<>(Arrays.asList("###@@@@1", "###@@@@2"));
-    }
+    return new ResponseEntity(new Data<GetTeamName>(getTeamName), HttpStatus.OK);
+  }
 
-    class GetProjects{
-        ArrayList<String> projects = new ArrayList<>(Arrays.asList("research1, lab2"));
-    }
+  @PostMapping("team")
+  public String saveTeam() {
+    return "error : ";
+  }
 
-    class GetTeamName{
-        String teamId = "###@@@@1";
-        String teamName = "Korea";
-    }
+
+  @AllArgsConstructor
+  static class Data<T> {
+
+    private T Result;
+  }
+
+  class GetMain {
+
+    String username = "‍유재원";
+    String email = "sjf471@korea.ac.kr";
+  }
+
+  class GetTeams {
+
+    ArrayList<String> teams = new ArrayList<>(Arrays.asList("###@@@@1", "###@@@@2"));
+  }
+
+  class GetProjects {
+
+    ArrayList<String> projects = new ArrayList<>(Arrays.asList("research1, lab2"));
+  }
+
+  class GetTeamName {
+
+    String teamId = "###@@@@1";
+    String teamName = "Korea";
+  }
 
 }

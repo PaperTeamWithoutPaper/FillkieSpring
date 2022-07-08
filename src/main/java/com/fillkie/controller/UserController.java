@@ -21,30 +21,32 @@ import java.io.IOException;
 @Slf4j
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
 
-    /**
-     * OAuth Redirect url, Login 검증 및 인증
-     * @param code : authorization_code
-     * @return : JWT(header)
-     */
-    @GetMapping("/oauth/google/callback")
-    public void oauthLogin(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
-        System.out.println("code : " + code);
-        String token = userService.oauthLogin(code); // access_token 발급 및 검증 실행
-        HttpHeaders headers = new HttpHeaders();
-        token = "bearer " + token;
+  /**
+   * OAuth Redirect url, Login 검증 및 인증
+   *
+   * @param code : authorization_code
+   * @return : JWT(header)
+   */
+  @GetMapping("/oauth/google/callback")
+  public void oauthLogin(@RequestParam("code") String code, HttpServletResponse response)
+      throws IOException {
+    System.out.println("code : " + code);
+    String token = userService.oauthLogin(code); // access_token 발급 및 검증 실행
+    HttpHeaders headers = new HttpHeaders();
+    token = "bearer " + token;
 //        headers.add("Authorization", token);
 //        return new ResponseEntity<>(null, headers,HttpStatus.OK);
-        String redirect_url = "https://fillkie.com/loginapi?token=" + token;
-        response.sendRedirect(redirect_url);
-    }
+    String redirect_url = "https://fillkie.com/loginapi?token=" + token;
+    response.sendRedirect(redirect_url);
+  }
 
-    @GetMapping("/test")
-    public void testToken(HttpServletRequest request, HttpServletResponse response){
-        log.info("UserController testToken : {}", request.getAttribute("email"));
+  @GetMapping("/test")
+  public void testToken(HttpServletRequest request, HttpServletResponse response) {
+    log.info("UserController testToken : {}", request.getAttribute("email"));
 //        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("sexy", "sexy");
-    }
+    response.setHeader("sexy", "sexy");
+  }
 }
