@@ -29,8 +29,19 @@ jobs:
         run: zip -qq -r ./$GITHUB_SHA.zip ./build/libs/*
         shell: bash
             
-      - uses: actions/upload-artifact@v2
-        name: Upload Build file to Github Artifacts
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          name: Build Code zip file 
-          path: ${{ github.workspace }}/*.zip
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
+          aws-region: ap-northeast-2
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://{저장할 폴더}/$GITHUB_SHA.zip
+
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name {fillkie}
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name {live}
+          --s3-location bucket={/home/ubuntu/FillkieSpring},bundleType=zip,key=$GITHUB_SHA.zip
+
