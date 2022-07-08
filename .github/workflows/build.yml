@@ -30,7 +30,7 @@ jobs:
         shell: bash
         
       - name: Find zip file
-        run: ls -lah ./$GITHUB_SHA.zip
+        run: ls -lah ./*.zip
         shell: bash
         
       - name: pwd file
