@@ -25,7 +25,7 @@ public class OAuthService {
 
     private static final String CLIENT_ID = "466033802517-plli2395asa5dlqq9a8437smbes70qtd.apps.googleusercontent.com";
     private static final String CLIENT_SECRET = "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";
-    private static final String REDIRECT_URI = "https://92c5-218-145-194-238.jp.ngrok.io/user/oauth/google/callback";
+    private static final String REDIRECT_URI = "https://api.fillkie.com/user/oauth/google/callback";
     private static final String GRANT_TYPE = "authorization_code";
 
     public OAuthService(RestTemplate restTemplate) {

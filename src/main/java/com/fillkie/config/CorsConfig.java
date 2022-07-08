@@ -19,7 +19,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         // 어디서든지 허용해주게 하는 것이다.
         // 모든 ip에 응답을 허용하는 것이다.
-        config.addAllowedOrigin("*");
+        config.addAllowedOriginPattern("*");
         // 모든 헤더 허용한다.
         // 모든 헤더에 응답을 허용한는 것이다.
         config.addAllowedHeader("*");

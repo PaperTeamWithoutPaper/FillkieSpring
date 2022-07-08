@@ -4,6 +4,7 @@ import com.fillkie.advice.exception.TokenEmptyException;
 import com.fillkie.config.auth.AuthorizationExtractor;
 import com.fillkie.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class BearerAuthInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(BearerAuthInterceptor.class);
 
@@ -37,8 +39,9 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
             throw new IllegalArgumentException("유효하지 않은 토큰");
         }
 
-        String email = String.valueOf(jwtTokenProvider.getSubject(token));
-        request.setAttribute("email", email);
+        String id = jwtTokenProvider.getSubject(token);
+        log.info("interceptor email : {}", id);
+        request.setAttribute("email", id);
         return true;
     }
 }

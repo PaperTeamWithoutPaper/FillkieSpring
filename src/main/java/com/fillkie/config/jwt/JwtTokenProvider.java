@@ -58,8 +58,8 @@ public class JwtTokenProvider {
     }
 
     // 토큰에서 값 추출
-    public Long getSubject(String token) {
-        return Long.valueOf(Jwts.parser()
+    public String getSubject(String token) {
+        return String.valueOf(Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()

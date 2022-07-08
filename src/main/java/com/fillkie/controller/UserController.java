@@ -18,7 +18,6 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class UserController {
 
@@ -38,14 +37,14 @@ public class UserController {
         token = "bearer " + token;
 //        headers.add("Authorization", token);
 //        return new ResponseEntity<>(null, headers,HttpStatus.OK);
-        String redirect_url = "https://7550-221-148-248-130.ngrok.io/loginapi?token=" + token;
+        String redirect_url = "https://fillkie.com/loginapi?token=" + token;
         response.sendRedirect(redirect_url);
     }
 
     @GetMapping("/test")
-    public String testToken(HttpServletRequest request, HttpServletResponse response){
+    public void testToken(HttpServletRequest request, HttpServletResponse response){
         log.info("UserController testToken : {}", request.getAttribute("email"));
 //        response.addHeader("Access-Control-Allow-Origin", "*");
-        return "SEXY";
+        response.setHeader("sexy", "sexy");
     }
 }
