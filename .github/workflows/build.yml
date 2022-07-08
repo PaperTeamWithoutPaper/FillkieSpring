@@ -41,4 +41,4 @@ jobs:
         name: Upload Build file to Github Artifacts
         with:
           name: Build Code zip file 
-          path: ${{ github.workspace }}/$GITHUB_SHA.zip
+          path: ${{ github.workspace }}/*.zip
