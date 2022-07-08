@@ -34,4 +34,3 @@ jobs:
         with:
           name: Build Code zip file 
           path: $GITHUB_SHA.zip
-        shell: bash
