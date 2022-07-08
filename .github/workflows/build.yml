@@ -43,5 +43,5 @@ jobs:
         run: aws deploy create-deployment --application-name fillkie
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name live
-          --s3-location bucket=/home/ubuntu/FillkieSpring,bundleType=zip,key=$GITHUB_SHA.zip
+          --s3-location bucket=s3-fillkie-develop,bundleType=zip,key=FillkieSpring/$GITHUB_SHA.zip
 
