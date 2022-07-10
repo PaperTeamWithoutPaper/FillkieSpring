@@ -6,6 +6,7 @@ import com.fillkie.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,11 @@ public class UserController {
 
   private final UserService userService;
 
+  @Value("${security.jwt.token.secret-key}")
+  private String secretKey;
+
+  @Value("${security.jwt.token.expired-length}")
+  private long expiredLength;
 
   /**
    * OAuth Redirect url, Login 검증 및 인증
@@ -47,6 +53,9 @@ public class UserController {
   public void testToken(HttpServletRequest request, HttpServletResponse response) {
     log.info("UserController testToken : {}", request.getAttribute("email"));
 //        response.addHeader("Access-Control-Allow-Origin", "*");
+
+    log.info("secretKey : {}", secretKey);
+    log.info("expiredLength : {}", expiredLength);
     response.setHeader("sexy", "sexy");
   }
 }

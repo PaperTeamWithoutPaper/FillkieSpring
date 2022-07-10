@@ -1,4 +1,29 @@
+# profile 관리
+
 spring:
+  config:
+    activate:
+      on-profile: "dev"
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: dev
+
+security:
+  jwt:
+    token:
+      secret-key: fillkieSecretKey
+      expired-length: 3600000
+
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "prod"
   data:
     mongodb:
       host: localhost
@@ -8,9 +33,24 @@ spring:
 security:
   jwt:
     token:
+      secret-key: secretsecret
+      expired-length: 3600000
+
+---
+
+spring:
+  profiles:
+    group:
+      "dev": "dev"
+      "prod": "prod"
+
+
+security:
+  jwt:
+    token:
       secret-key: fillkieSecretKey
       expire-length: 3600000
 
 
 server:
-  port: 80
+  port: 8080
