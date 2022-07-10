@@ -24,4 +24,9 @@ public class OAuthToken {
     this.scope = scope;
     this.tokenType = tokenType;
   }
+
+  @Override
+  public String toString() {
+    return "accessToken : " + accessToken + "\nexpiresIn : " + expiresIn + "\nidToken : " + idToken + "\nrefreshToken : " + refreshToken + "\nscope : " + scope + "\ntokenType" +tokenType;
+  }
 }
