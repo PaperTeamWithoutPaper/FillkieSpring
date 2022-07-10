@@ -15,7 +15,8 @@ security:
     token:
       secret-key: fillkieSecretKey
       expired-length: 3600000
-
+server:
+  port: 8080
 
 
 ---
@@ -36,6 +37,9 @@ security:
       secret-key: secretsecret
       expired-length: 3600000
 
+server:
+  port: 80
+
 ---
 
 spring:
@@ -49,7 +53,7 @@ security:
   jwt:
     token:
       secret-key: fillkieSecretKey
-      expire-length: 3600000
+      expired-length: 3600000
 
 
 server:

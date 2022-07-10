@@ -25,7 +25,7 @@ public class AppConfig implements WebMvcConfigurer {
   public void addInterceptors(InterceptorRegistry registry) {
     logger.info(">>> 인터셉터 등록");
     registry.addInterceptor(bearerAuthInterceptor)
-        .addPathPatterns("/**")
+        .addPathPatterns("*")
         .excludePathPatterns("/user/oauth/**");
 //                .addPathPatterns("/api/booking/{bookingId}")
 //                .addPathPatterns("/api/rooms/{userId}/wish/{roomId}");
