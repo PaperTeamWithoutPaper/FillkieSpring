@@ -3,10 +3,11 @@ name: Build and Deploy Spring Boot to AWS EC2
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
-  build:
+  live-deploy:
+    if: contains(github.ref, 'master')
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -44,13 +45,8 @@ jobs:
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name live
           --s3-location bucket=s3-fillkie-develop,bundleType=zip,key=$GITHUB_SHA.zip
-
-on:
-  push:
-    branches: [ develop ]
-
-jobs:
-  build:
+  dev-deploy:
+    if: contains(github.ref, 'develop')
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
