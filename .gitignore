@@ -282,4 +282,4 @@ nbdist/
 .nb-gradle/
 
 ### Application Settings ###
-application.yml
+**/application.yml
