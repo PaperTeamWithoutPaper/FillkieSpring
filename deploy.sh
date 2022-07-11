@@ -1,4 +1,4 @@
-REPOSITORY=/home/ubuntu/FillkieSpring
+REPOSITORY=/home/ubuntu/app
 cd $REPOSITORY
 
 APP_NAME=curriculum #1
@@ -17,4 +17,4 @@ else
 fi
 
 echo "> $JAR_PATH 배포" #3
-nohup java -jar $REPOSITORY/build/libs/fillkie-0.0.1-SNAPSHOT.jar --spring.config.location=$REPOSITORY/build/resources/main/application.yml > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar $REPOSITORY/build/libs/fillkie-0.0.1-SNAPSHOT.jar --spring.config.location=~/spring-app.yml > /dev/null 2> /dev/null < /dev/null &
