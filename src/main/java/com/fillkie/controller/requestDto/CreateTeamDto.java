@@ -1,4 +1,4 @@
-package com.fillkie.controller.dto;
+package com.fillkie.controller.requestDto;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Data;

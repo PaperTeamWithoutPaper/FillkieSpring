@@ -1,6 +1,6 @@
 package com.fillkie.service;
 
-import com.fillkie.controller.dto.CreateTeamDto;
+import com.fillkie.controller.requestDto.CreateTeamDto;
 import com.fillkie.domain.Group;
 import com.fillkie.domain.GroupUser;
 import com.fillkie.domain.teamDomain.Team;

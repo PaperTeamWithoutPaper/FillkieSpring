@@ -1,12 +1,12 @@
 package com.fillkie.controller;
 
-import com.fillkie.controller.DocsController.Data;
-import com.fillkie.controller.DocsController.GetTeams;
-import com.fillkie.controller.dto.CreateTeamDto;
+import com.fillkie.controller.requestDto.CreateTeamDto;
 import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseFail;
 import com.fillkie.controller.response.ResponseSuccess;
+import com.fillkie.controller.responseDto.InviteTeamDto;
 import com.fillkie.service.TeamService;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,7 +39,7 @@ public class TeamController {
         if(teamId == null){
             return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ResponseFail(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), "팀 생성 실패!"));
+                .body(new ResponseFail(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "팀 생성 실패!"));
         }else{
             return ResponseEntity
                 .status(HttpStatus.OK)
@@ -46,6 +47,19 @@ public class TeamController {
         }
 
     }
+
+    @GetMapping("invite")
+    public ResponseEntity<? extends DefaultResponse> inviteTeam(@RequestParam("teamId") String teamId){
+        String uuid = UUID.randomUUID().toString();
+        uuid = uuid.replaceAll("[-]", "");
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseSuccess<InviteTeamDto>(true, HttpStatus.OK.value(), "URL 받아랑!", new InviteTeamDto(uuid)));
+    }
+
+//    @PostMapping("invite/accept/*")
+//    public ResponseEntity<? extends DefaultResponse> acceptInviteTeam(){
+//
+//    }
 
     @GetMapping("test")
     public ResponseEntity<String> testResponseBody(){
