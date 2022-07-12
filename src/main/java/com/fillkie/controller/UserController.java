@@ -39,7 +39,7 @@ public class UserController {
     token = "bearer " + token;
 //        headers.add("Authorization", token);
 //        return new ResponseEntity<>(null, headers,HttpStatus.OK);
-    String redirect_url = "https://fillkie.com/loginapi?token=" + token;
+    String redirect_url = "http://localhost:3000/loginapi?token=" + token;
     response.sendRedirect(redirect_url);
   }
 
