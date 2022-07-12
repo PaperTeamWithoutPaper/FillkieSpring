@@ -24,19 +24,13 @@ public class UserController {
 
   private final UserService userService;
 
-  @Value("${security.jwt.token.secret-key}")
-  private String secretKey;
-
-  @Value("${security.jwt.token.expired-length}")
-  private long expiredLength;
-
   /**
    * OAuth Redirect url, Login 검증 및 인증
    *
    * @param code : authorization_code
    * @return : JWT(header)
    */
-  @GetMapping("/oauth/google/callback")
+  @GetMapping("/oauth/google")
   public void oauthLogin(@RequestParam("code") String code, HttpServletResponse response)
       throws IOException {
     System.out.println("code : " + code);
@@ -54,8 +48,11 @@ public class UserController {
     log.info("UserController testToken : {}", request.getAttribute("email"));
 //        response.addHeader("Access-Control-Allow-Origin", "*");
 
-    log.info("secretKey : {}", secretKey);
-    log.info("expiredLength : {}", expiredLength);
+//    log.info("secretKey : {}", secretKey);
+//    log.info("expiredLength : {}", expiredLength);
+//    log.info("POST_URL : {}", POST_URL);
+//    log.info("GET_URL : {}", GET_URL);
+
     response.setHeader("sexy", "sexy");
   }
 }

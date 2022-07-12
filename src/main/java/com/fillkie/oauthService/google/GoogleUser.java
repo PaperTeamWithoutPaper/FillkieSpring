@@ -1,10 +1,9 @@
 package com.fillkie.oauthService.google;
 
-import com.fillkie.domain.Team;
 import com.fillkie.domain.User;
+import java.util.ArrayList;
 import lombok.Data;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
 @Data
@@ -50,7 +49,7 @@ public class GoogleUser {
         .email(email)
         .name(name)
         .accessToken(accessToken)
-        .teams(new HashSet<>())
+        .teams(new ArrayList<>())
         .build();
   }
 

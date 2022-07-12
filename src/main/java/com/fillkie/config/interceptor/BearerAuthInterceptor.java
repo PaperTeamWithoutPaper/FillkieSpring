@@ -42,8 +42,8 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
     }
 
     String id = jwtTokenProvider.getSubject(token);
-    log.info("interceptor email : {}", id);
-    request.setAttribute("email", id);
+    log.info("interceptor id : {}", id);
+    request.setAttribute("id", id);
     return true;
   }
 }

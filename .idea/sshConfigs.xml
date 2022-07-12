@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="13.124.191.230" id="bad3f55f-b039-4b16-8c93-a91d6074d6bb" keyPath="$USER_HOME$/.ssh/keyPair-fillkie-develop-spring.pem" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

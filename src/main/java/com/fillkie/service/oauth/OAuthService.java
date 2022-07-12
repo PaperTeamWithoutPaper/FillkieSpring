@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fillkie.oauthService.google.GoogleUser;
 import com.fillkie.oauthService.google.OAuthToken;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,35 +20,30 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class OAuthService {
 
-  private final ObjectMapper objectMapper;
+  private ObjectMapper objectMapper = new ObjectMapper().setPropertyNamingStrategy(
+      PropertyNamingStrategy.SNAKE_CASE);;
   private final RestTemplate restTemplate;
 
   @Value("${oauth.google.client-id}")
-  private static String CLIENT_ID;
+  private String CLIENT_ID;
 
   @Value("${oauth.google.client-secret}")
-  private static String CLIENT_SECRET;
+  private String CLIENT_SECRET;
 
   @Value("${oauth.google.redirect-uri}")
-  private static String REDIRECT_URI;
+  private String REDIRECT_URI;
 
   @Value("${oauth.google.grant-type}")
-  private static String GRANT_TYPE;
+  private String GRANT_TYPE;
 
   @Value("${oauth.google.post-url}")
-  private static String POST_URL;
+  private String POST_URL;
 
   @Value("${oauth.google.get-url}")
-  private static String GET_URL;
-
-
-  public OAuthService(RestTemplate restTemplate) {
-    this.objectMapper = new ObjectMapper().setPropertyNamingStrategy(
-        PropertyNamingStrategy.SNAKE_CASE);
-    this.restTemplate = restTemplate;
-  }
+  private String GET_URL;
 
   /**
    * Access_Token POST 요청

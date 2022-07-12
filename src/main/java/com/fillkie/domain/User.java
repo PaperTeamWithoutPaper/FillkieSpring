@@ -1,7 +1,9 @@
 package com.fillkie.domain;
 
+import com.fillkie.domain.teamDomain.Team;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,11 +19,11 @@ public class User {
   private String email;
   private String name;
   private String accessToken;
-  private Set<Team> teams;
+  private List<String> teams;
 
 
   @Builder
-  public User(String email, String name, String accessToken, Set<Team> teams) {
+  public User(String email, String name, String accessToken, List<String> teams) {
     this.email = email;
     this.name = name;
     this.accessToken = accessToken;
