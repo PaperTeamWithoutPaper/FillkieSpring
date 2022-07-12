@@ -4,10 +4,9 @@ import com.fillkie.controller.dto.CreateTeamDto;
 import com.fillkie.domain.Group;
 import com.fillkie.domain.GroupUser;
 import com.fillkie.domain.teamDomain.Team;
-import com.fillkie.domain.teamDomain.TeamRole;
-import com.fillkie.repository.team.GroupRepository;
-import com.fillkie.repository.team.TeamRepository;
-import com.fillkie.repository.team.TeamRoleRepository;
+import com.fillkie.repository.GroupRepository;
+import com.fillkie.repository.GroupUserRepository;
+import com.fillkie.repository.TeamRepository;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class TeamService {
 
-    private final TeamRoleRepository teamRoleRepository;
     private final TeamRepository teamRepository;
     private final GroupRepository groupRepository;
+    private final GroupUserRepository groupUserRepository;
 
     @Transactional
     public String saveTeam(CreateTeamDto createTeamDto, String userId){
@@ -74,6 +73,8 @@ public class TeamService {
             .groupId(professor.getId())
             .userId(userId)
             .build();
+        groupUserRepository.insert(groupUser);
+
 
         return team.getId();
 

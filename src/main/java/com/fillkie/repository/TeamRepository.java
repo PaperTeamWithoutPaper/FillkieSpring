@@ -1,4 +1,4 @@
-package com.fillkie.repository.team;
+package com.fillkie.repository;
 
 import com.fillkie.domain.teamDomain.Team;
 import java.util.Optional;
