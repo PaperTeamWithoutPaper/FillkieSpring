@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,14 @@ public class TeamController {
                 .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 생성 성공!", teamId));
         }
 
+    }
+
+    @GetMapping("test")
+    public ResponseEntity<String> testResponseBody(){
+        String str = "\"test\":\"sexy\"";
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(str);
 
     }
 
