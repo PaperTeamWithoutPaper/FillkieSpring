@@ -1,10 +1,8 @@
 package com.fillkie.oauthService.google;
 
-import com.fillkie.domain.Team;
 import com.fillkie.domain.User;
 import lombok.Data;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
 @Data

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -32,6 +33,7 @@ public class UserService {
 //        this.jwtTokenProvider = jwtTokenProvider;
 //    }
 
+  @Transactional
   public String oauthLogin(String code) {
     ResponseEntity<String> accessTokenResponse = oauthService.createPostRequest(code);
     OAuthToken oAuthToken = oauthService.getAccessToken(accessTokenResponse);

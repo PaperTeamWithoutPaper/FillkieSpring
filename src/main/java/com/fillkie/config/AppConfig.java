@@ -26,7 +26,7 @@ public class AppConfig implements WebMvcConfigurer {
     logger.info(">>> 인터셉터 등록");
     registry.addInterceptor(bearerAuthInterceptor)
         // /**로 변경해야 한다.
-        .addPathPatterns("*")
+        .addPathPatterns("/**")
         .excludePathPatterns("/user/oauth/**");
 //                .addPathPatterns("/api/booking/{bookingId}")
 //                .addPathPatterns("/api/rooms/{userId}/wish/{roomId}");

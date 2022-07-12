@@ -1,5 +1,6 @@
 package com.fillkie.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,5 +13,7 @@ public class Project {
   private String id;
   private String user;
   private String directory;
+  private String teamId;
+
 
 }
