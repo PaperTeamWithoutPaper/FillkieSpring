@@ -36,19 +36,12 @@ public class GoogleUser {
     this.hd = hd;
   }
 
-  public User toUser(String accessToken) {
-//        Team team1 = new Team();
-//        Team team2 = new Team();
-//        team1.setTeam("첫번째");
-//        team2.setTeam("두번째");
-//
-//        Team team[] = new Team[2];
-//        team[0] = team1;
-//        team[1] = team2;
+  public User toUser(String accessToken, String refreshToken) {
     return User.builder()
         .email(email)
         .name(name)
         .accessToken(accessToken)
+        .refreshToken(refreshToken)
         .teams(new ArrayList<>())
         .build();
   }

@@ -4,10 +4,6 @@ import lombok.Data;
 
 @Data
 public class ResponseSuccess<T> extends DefaultResponse{
-
-    private boolean success;
-    private int code;
-    private String msg;
     private T data;
 
     public ResponseSuccess(boolean success, int code, String msg, T data) {

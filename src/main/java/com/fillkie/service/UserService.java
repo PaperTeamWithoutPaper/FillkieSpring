@@ -18,8 +18,9 @@ import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Slf4j
 public class UserService {
 
   private Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -50,10 +51,13 @@ public class UserService {
     }
     User user = userRepository.findByEmail(googleUser.getEmail())
         .orElseThrow(UserNotFoundException::new);
+    updateToken(user, oAuthToken);
+
     log.info("UserService Login User : {}", user.toString());
     return jwtTokenProvider.createToken(user.getId(), user.getEmail());
   }
 
+  // 예외 처리 필요
   private boolean isJoinedUser(GoogleUser googleUser) {
     Optional<User> users = userRepository.findByEmail(googleUser.getEmail()); // email로 DB 접근
     logger.info("Joined User: {}", users);
@@ -61,7 +65,14 @@ public class UserService {
   }
 
   private void signUp(GoogleUser googleUser, OAuthToken oAuthToken) {
-    User user = googleUser.toUser(oAuthToken.getAccessToken());
+    User user = googleUser.toUser(oAuthToken.getAccessToken(), oAuthToken.getRefreshToken());
     userRepository.insert(user);
   }
+
+  private void updateToken(User user, OAuthToken oAuthToken){
+    user.setAccessToken(oAuthToken.getAccessToken());
+    user.setRefreshToken(oAuthToken.getRefreshToken());
+    userRepository.insert(user);
+  }
+
 }

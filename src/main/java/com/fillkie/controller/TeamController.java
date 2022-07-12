@@ -1,11 +1,14 @@
 package com.fillkie.controller;
 
-import com.fillkie.controller.requestDto.CreateTeamDto;
+import com.fillkie.controller.requestDto.AcceptInviteTeamReqDto;
+import com.fillkie.controller.requestDto.CreateTeamReqDto;
 import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseFail;
 import com.fillkie.controller.response.ResponseSuccess;
-import com.fillkie.controller.responseDto.InviteTeamDto;
+import com.fillkie.controller.responseDto.InviteTeamResDto;
 import com.fillkie.service.TeamService;
+import com.fillkie.service.UserService;
+import java.text.ParseException;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -27,9 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
 
     private final TeamService teamService;
+    private final UserService userService;
 
     @PostMapping("create")
-    public ResponseEntity<? extends DefaultResponse> createTeam(@RequestBody @Valid CreateTeamDto createTeamDto, HttpServletRequest request){
+    public ResponseEntity<? extends DefaultResponse> createTeam(@RequestBody @Valid CreateTeamReqDto createTeamDto, HttpServletRequest request){
         String userId = (String) request.getAttribute("id");
         log.info("createTeam userId : {}", userId);
         String teamId = teamService.saveTeam(createTeamDto, userId);
@@ -50,16 +54,32 @@ public class TeamController {
 
     @GetMapping("invite")
     public ResponseEntity<? extends DefaultResponse> inviteTeam(@RequestParam("teamId") String teamId){
-        String uuid = UUID.randomUUID().toString();
-        uuid = uuid.replaceAll("[-]", "");
+        String url = UUID.randomUUID().toString();
+        url = url.replaceAll("[-]", "");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseSuccess<InviteTeamDto>(true, HttpStatus.OK.value(), "URL 받아랑!", new InviteTeamDto(uuid)));
+        teamService.inviteTeam(teamId, url);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseSuccess<InviteTeamResDto>(true, HttpStatus.OK.value(), "URL 받아랑!", new InviteTeamResDto(url)));
     }
 
-//    @PostMapping("invite/accept/*")
-//    public ResponseEntity<? extends DefaultResponse> acceptInviteTeam(){
-//
-//    }
+    @PostMapping("invite/accept/")
+    public ResponseEntity<? extends DefaultResponse> acceptInviteTeam(@RequestBody @Valid
+        AcceptInviteTeamReqDto acceptInviteTeamReqDto, HttpServletRequest request)
+        throws ParseException {
+        String teamId = teamService.acceptInviteTeam(acceptInviteTeamReqDto.getUrl(),
+            (String) request.getAttribute("id"));
+
+        if(teamId == null){
+            return ResponseEntity
+                .status(HttpStatus.GONE)
+                .body(new ResponseFail(false, HttpStatus.NOT_ACCEPTABLE.value(), "시간 초과!"));
+        }else{
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 합류 성공!", teamId));
+        }
+
+    }
 
     @GetMapping("test")
     public ResponseEntity<String> testResponseBody(){
@@ -67,7 +87,6 @@ public class TeamController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(str);
-
     }
 
 }

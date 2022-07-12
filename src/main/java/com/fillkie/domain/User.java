@@ -19,15 +19,25 @@ public class User {
   private String email;
   private String name;
   private String accessToken;
+  private String refreshToken;
   private List<String> teams;
 
 
   @Builder
-  public User(String email, String name, String accessToken, List<String> teams) {
+  public User(String email, String name, String accessToken, String refreshToken, List<String> teams) {
     this.email = email;
     this.name = name;
     this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
     this.teams = teams;
+  }
+
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
   }
 
   @Override
