@@ -1,5 +1,8 @@
 package com.fillkie.controller.response;
 
+import lombok.Data;
+
+@Data
 public class ResponseSuccess<T> extends DefaultResponse{
 
     private boolean success;
