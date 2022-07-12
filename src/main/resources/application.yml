@@ -1,60 +1,24 @@
-# profile 관리
-
 spring:
-  config:
-    activate:
-      on-profile: "dev"
   data:
     mongodb:
       host: localhost
       port: 27017
-      database: dev
+      database: database
 
 security:
   jwt:
     token:
-      secret-key: fillkieSecretKey
-      expired-length: 3600000
-server:
-  port: 8080
+      secret-key: secret-key
+      expired-length: 120000
 
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: "prod"
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: fillkie
-
-security:
-  jwt:
-    token:
-      secret-key: secretsecret
-      expired-length: 3600000
+oauth:
+  google:
+    client-id: client-id
+    client-secret: client-secret
+    redirect-uri: redirect-uri
+    grant-type: grant-type
+    post-url: post-url
+    get-url: get-url
 
 server:
   port: 80
-
----
-
-spring:
-  profiles:
-    group:
-      "dev": "dev"
-      "prod": "prod"
-
-
-security:
-  jwt:
-    token:
-      secret-key: fillkieSecretKey
-      expired-length: 3600000
-
-
-server:
-  port: 8080
