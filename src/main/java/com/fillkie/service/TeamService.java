@@ -1,10 +1,14 @@
 package com.fillkie.service;
 
 import com.fillkie.controller.dto.CreateTeamDto;
+import com.fillkie.domain.Group;
+import com.fillkie.domain.GroupUser;
 import com.fillkie.domain.teamDomain.Team;
 import com.fillkie.domain.teamDomain.TeamRole;
+import com.fillkie.repository.team.GroupRepository;
 import com.fillkie.repository.team.TeamRepository;
 import com.fillkie.repository.team.TeamRoleRepository;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,24 +22,60 @@ public class TeamService {
 
     private final TeamRoleRepository teamRoleRepository;
     private final TeamRepository teamRepository;
+    private final GroupRepository groupRepository;
 
     @Transactional
     public String saveTeam(CreateTeamDto createTeamDto, String userId){
         String teamName = createTeamDto.getTeamName();
-        TeamRole teamRole = new TeamRole();
-        teamRole.addAdmin(userId);
-
-        TeamRole newTeamRole = teamRoleRepository.insert(teamRole);
 
         Team team = Team.builder()
             .name(teamName)
+            .users(new ArrayList<>())
+            .projects(new ArrayList<>())
+            .build();
+        team.addUser(userId);
+        team = teamRepository.insert(team);
+
+        Group professor = Group.builder()
+            .name("professor")
+            .teamId(team.getId())
+            .users(new ArrayList<>())
+            .roles(new ArrayList<>())
+            .build();
+        professor.addUser(userId);
+        professor = groupRepository.insert(professor);
+
+        Group doctor = Group.builder()
+            .name("doctor")
+            .teamId(team.getId())
+            .users(new ArrayList<>())
+            .roles(new ArrayList<>())
+            .build();
+        doctor = groupRepository.insert(doctor);
+
+        Group master = Group.builder()
+            .name("master")
+            .teamId(team.getId())
+            .users(new ArrayList<>())
+            .roles(new ArrayList<>())
+            .build();
+        master = groupRepository.insert(master);
+
+        Group intern = Group.builder()
+            .name("intern")
+            .teamId(team.getId())
+            .users(new ArrayList<>())
+            .roles(new ArrayList<>())
+            .build();
+        intern = groupRepository.insert(intern);
+
+        GroupUser groupUser = GroupUser.builder()
+            .teamId(team.getId())
+            .groupId(professor.getId())
             .userId(userId)
-            .roleId(newTeamRole.getId())
             .build();
 
-        Team newTeam = teamRepository.insert(team);
-
-        return newTeam.getId();
+        return team.getId();
 
     }
 

@@ -14,12 +14,27 @@ public class Group {
     @Id
     private String id;
     private String name;
-    private List<String> users = new ArrayList<>();
+    private String teamId;
+    private List<String> users;
+    private List<String> roles;
+
 
     @Builder
-    public Group(String name, String user) {
+    public Group(String name, String teamId, List<String> users, List<String> roles) {
         this.name = name;
-        users.add(user);
+        this.teamId = teamId;
+        this.users = users;
+        this.roles = roles;
+    }
+
+    public String addUser(String userId){
+        users.add(userId);
+        return userId;
+    }
+
+    public String addRole(String role){
+        roles.add(role);
+        return role;
     }
 
 }

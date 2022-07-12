@@ -29,7 +29,10 @@ public class TeamController {
     @PostMapping("create")
     public ResponseEntity<? extends DefaultResponse> createTeam(@RequestBody @Valid CreateTeamDto createTeamDto, HttpServletRequest request){
         String userId = (String) request.getAttribute("id");
+        log.info("createTeam userId : {}", userId);
         String teamId = teamService.saveTeam(createTeamDto, userId);
+        log.info("createTeam teamId : {}", teamId);
+
 
         if(teamId == null){
             return ResponseEntity

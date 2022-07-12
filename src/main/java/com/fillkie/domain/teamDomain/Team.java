@@ -16,16 +16,14 @@ public class Team {
   @Id
   private String id;
   private String name;
-  private List<String> users = new ArrayList<>();
-  private List<String> projects = new ArrayList<>();
-  private String roleId;
-  private List<String> groups = new ArrayList<>();
+  private List<String> users;
+  private List<String> projects;
 
   @Builder
-  public Team(String name, String userId, String roleId) {
+  public Team(String name, List<String> users, List<String> projects) {
     this.name = name;
-    users.add(userId);
-    this.roleId =roleId;
+    this.users = users;
+    this.projects = projects;
   }
 
   public void addUser(String userId){
@@ -36,8 +34,5 @@ public class Team {
     projects.add(projectId);
   }
 
-  public void addGroups(String groupId){
-    groups.add(groupId);
-  }
 
 }
