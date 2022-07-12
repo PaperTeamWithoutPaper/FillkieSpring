@@ -9,6 +9,9 @@ jobs:
   live-deploy:
     if: contains(github.ref, 'master')
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        mongodb-version: ['5.0']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -55,7 +58,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        mongodb-version: ['4.2', '4.4', '5.0']
+        mongodb-version: ['5.0']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
