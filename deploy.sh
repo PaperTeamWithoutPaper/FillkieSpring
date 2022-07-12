@@ -17,4 +17,4 @@ else
 fi
 
 echo "> $JAR_PATH 배포" #3
-nohup java -jar $REPOSITORY/build/libs/fillkie-0.0.1-SNAPSHOT.jar --spring.config.location=~/spring-app.yml > /dev/null 2> /dev/null < /dev/null &
+sudo nohup java -jar $REPOSITORY/build/libs/fillkie-0.0.1-SNAPSHOT.jar --spring.config.location=/home/ubuntu/spring-app.yml > /dev/null 2> /dev/null < /dev/null &
