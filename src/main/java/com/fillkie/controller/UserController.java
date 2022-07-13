@@ -37,8 +37,6 @@ public class UserController {
     String token = userService.oauthLogin(code); // access_token 발급 및 검증 실행
     HttpHeaders headers = new HttpHeaders();
     token = "bearer " + token;
-//        headers.add("Authorization", token);
-//        return new ResponseEntity<>(null, headers,HttpStatus.OK);
     String redirect_url = "http://localhost:3000/loginapi?token=" + token;
     response.sendRedirect(redirect_url);
   }
