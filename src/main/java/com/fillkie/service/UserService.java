@@ -72,7 +72,7 @@ public class UserService {
   private void updateToken(User user, OAuthToken oAuthToken){
     user.setAccessToken(oAuthToken.getAccessToken());
     user.setRefreshToken(oAuthToken.getRefreshToken());
-    userRepository.insert(user);
+    userRepository.save(user);
   }
 
 }
