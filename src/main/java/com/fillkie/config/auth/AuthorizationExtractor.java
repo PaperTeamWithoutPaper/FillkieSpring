@@ -15,8 +15,8 @@ public class AuthorizationExtractor {
   public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName();
 
   public String extract(HttpServletRequest request, String type) {
-    request.getHeaderNames().asIterator()
-        .forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
+//    request.getHeaderNames().asIterator()
+//        .forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
     Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
     while (headers.hasMoreElements()) {
       String value = headers.nextElement();
