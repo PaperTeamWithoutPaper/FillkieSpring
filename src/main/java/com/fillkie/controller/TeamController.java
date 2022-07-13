@@ -6,9 +6,13 @@ import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseFail;
 import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.responseDto.InviteTeamResDto;
+import com.fillkie.controller.responseDto.TeamListResDto;
+import com.fillkie.controller.responseDto.TeamDetailResDto;
 import com.fillkie.service.TeamService;
 import com.fillkie.service.UserService;
+import com.fillkie.service.dto.TeamDetailDto;
 import java.text.ParseException;
+import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -79,6 +83,27 @@ public class TeamController {
                 .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 합류 성공!", teamId));
         }
 
+    }
+
+    @GetMapping("list")
+    public ResponseEntity<? extends DefaultResponse> readListTeam(@RequestParam("userId") String userId){
+
+        List<String> teamIdList = userService.getTeamList(userId);
+        List<String> teamNameList = teamService.getTeamNameList(teamIdList);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new ResponseSuccess<TeamListResDto>(true, HttpStatus.OK.value(), "팀 리스트!", new TeamListResDto(teamIdList, teamNameList)));
+    }
+
+    @GetMapping("detail")
+    public ResponseEntity<? extends DefaultResponse> readDetailTeam(@RequestParam("teamId") String teamId){
+
+        TeamDetailDto teamDetailDto = teamService.getTeamDetail(teamId);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new ResponseSuccess<TeamDetailDto>(true, HttpStatus.OK.value(), "팀 명, 인원수!", teamDetailDto));
     }
 
     @GetMapping("test")

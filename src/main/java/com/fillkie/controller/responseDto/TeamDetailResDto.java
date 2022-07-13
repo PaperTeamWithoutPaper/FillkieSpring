@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * TeamController : inviteTeam
+ * TeamController : readDetailTeam
  */
 @Data
 @AllArgsConstructor
-public class InviteTeamResDto {
-    private String url;
+public class TeamDetailResDto {
+    private String teamName;
+    private int count;
 }

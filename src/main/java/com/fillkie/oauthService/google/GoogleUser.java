@@ -40,6 +40,7 @@ public class GoogleUser {
     return User.builder()
         .email(email)
         .name(name)
+        .image(picture)
         .accessToken(accessToken)
         .refreshToken(refreshToken)
         .teams(new ArrayList<>())

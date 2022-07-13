@@ -20,5 +20,9 @@ oauth:
     post-url: post-url
     get-url: get-url
 
+logging:
+  level:
+    root: info
+
 server:
   port: 80

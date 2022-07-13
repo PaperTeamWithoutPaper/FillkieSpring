@@ -1,4 +1,4 @@
-package com.fillkie.repository;
+package com.fillkie.repository.team;
 
 import com.fillkie.domain.teamDomain.Team;
 import com.fillkie.domain.teamDomain.TeamInvite;

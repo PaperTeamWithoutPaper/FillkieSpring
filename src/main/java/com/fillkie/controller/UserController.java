@@ -1,8 +1,11 @@
 package com.fillkie.controller;
 
 
+import com.fillkie.controller.response.DefaultResponse;
+import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.response.TokenResponse;
 import com.fillkie.service.UserService;
+import com.fillkie.service.dto.UserProfileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +42,17 @@ public class UserController {
     token = "bearer " + token;
     String redirect_url = "https://fillkie.com/loginapi?token=" + token;
     response.sendRedirect(redirect_url);
+  }
+
+  @GetMapping("profile")
+  public ResponseEntity<? extends DefaultResponse> readProfileUser(HttpServletRequest request){
+    String userId = (String) request.getAttribute("id");
+
+    UserProfileDto userProfile = userService.getUserProfile(userId);
+
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(new ResponseSuccess<UserProfileDto>(true, HttpStatus.OK.value(), "사용자 프로필!", userProfile));
   }
 
   @GetMapping("/test")

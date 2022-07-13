@@ -6,7 +6,9 @@ import com.fillkie.domain.User;
 import com.fillkie.oauthService.google.GoogleUser;
 import com.fillkie.oauthService.google.OAuthToken;
 import com.fillkie.repository.UserRepository;
+import com.fillkie.service.dto.UserProfileDto;
 import com.fillkie.service.oauth.OAuthService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -55,6 +57,20 @@ public class UserService {
 
     log.info("UserService Login User : {}", user.toString());
     return jwtTokenProvider.createToken(user.getId(), user.getEmail());
+  }
+
+  // 예외 처리 필요
+  private User getUser(String userId){
+    return userRepository.findById(userId).orElseThrow(RuntimeException::new);
+  }
+  public List<String> getTeamList(String userId){
+    User user = getUser(userId);
+    return user.getTeams();
+  }
+
+  public UserProfileDto getUserProfile(String userId){
+    User user = getUser(userId);
+    return new UserProfileDto(user.getName(), user.getImage());
   }
 
   // 예외 처리 필요
