@@ -44,48 +44,37 @@ public class TeamService {
         team.addUser(userId);
         team = teamRepository.insert(team);
 
-        Group professor = Group.builder()
-            .name("professor")
-            .teamId(team.getId())
-            .users(new ArrayList<>())
-            .roles(new ArrayList<>())
-            .build();
-        professor.addUser(userId);
-        professor = groupRepository.insert(professor);
+        Group professor = saveGroup("professor", team.getId(), userId, true);
+        Group doctor = saveGroup("doctor", team.getId(), userId, false);
+        Group master = saveGroup("master", team.getId(), userId, false);
+        Group intern = saveGroup("intern", team.getId(), userId, false);
 
-        Group doctor = Group.builder()
-            .name("doctor")
-            .teamId(team.getId())
-            .users(new ArrayList<>())
-            .roles(new ArrayList<>())
-            .build();
-        doctor = groupRepository.insert(doctor);
-
-        Group master = Group.builder()
-            .name("master")
-            .teamId(team.getId())
-            .users(new ArrayList<>())
-            .roles(new ArrayList<>())
-            .build();
-        master = groupRepository.insert(master);
-
-        Group intern = Group.builder()
-            .name("intern")
-            .teamId(team.getId())
-            .users(new ArrayList<>())
-            .roles(new ArrayList<>())
-            .build();
-        intern = groupRepository.insert(intern);
-
-        GroupUser groupUser = GroupUser.builder()
-            .teamId(team.getId())
-            .groupId(professor.getId())
-            .userId(userId)
-            .build();
-        groupUserRepository.insert(groupUser);
+        GroupUser groupUser = saveGroupUser(team.getId(), professor.getId(), userId);
 
         return team.getId();
 
+    }
+
+    private Group saveGroup(String groupName, String teamId, String userId, boolean flag){
+        Group group = Group.builder()
+            .name("professor")
+            .teamId(teamId)
+            .users(new ArrayList<>())
+            .roles(new ArrayList<>())
+            .build();
+        if (flag){
+            group.addUser(userId);
+        }
+        return groupRepository.insert(group);
+    }
+
+    private GroupUser saveGroupUser(String teamId, String groupId, String userId){
+        GroupUser groupUser = GroupUser.builder()
+            .teamId(teamId)
+            .groupId(groupId)
+            .userId(userId)
+            .build();
+        return groupUserRepository.insert(groupUser);
     }
 
     // 예외 처리 필요
