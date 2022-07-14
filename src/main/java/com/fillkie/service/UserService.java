@@ -78,8 +78,11 @@ public class UserService {
     List<UserTeam> userTeams =
         userTeamRepository.findByUserId(userId);
     List<TeamListResDto> teamListResDtos = new ArrayList<>();
-    int idx = 0;
-    userTeams.stream().forEach(userTeam -> teamListResDtos.add(new TeamListResDto(idx, userTeam.getTeamId(), null, userTeam.getTeamName())));
+    for(int i = 0 ; i < userTeams.size() ; i++){
+      teamListResDtos.add(new TeamListResDto(i, userTeams.get(i).getTeamId(), null, userTeams.get(i).getTeamName()));
+    }
+//    int idx = 0;
+//    userTeams.stream().forEach(userTeam -> teamListResDtos.add(new TeamListResDto(idx, userTeam.getTeamId(), null, userTeam.getTeamName())));
     return teamListResDtos;
   }
 
