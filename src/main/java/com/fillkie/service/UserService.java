@@ -2,12 +2,16 @@ package com.fillkie.service;
 
 import com.fillkie.advice.exception.UserNotFoundException;
 import com.fillkie.config.jwt.JwtTokenProvider;
+import com.fillkie.controller.responseDto.TeamListResDto;
 import com.fillkie.domain.User;
+import com.fillkie.domain.UserTeam;
 import com.fillkie.oauthService.google.GoogleUser;
 import com.fillkie.oauthService.google.OAuthToken;
 import com.fillkie.repository.UserRepository;
+import com.fillkie.repository.UserTeamRepository;
 import com.fillkie.service.dto.UserProfileDto;
 import com.fillkie.service.oauth.OAuthService;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +31,7 @@ public class UserService {
 
   private Logger logger = LoggerFactory.getLogger(UserService.class);
   private final UserRepository userRepository;
+  private final UserTeamRepository userTeamRepository;
   private final OAuthService oauthService;
   private final JwtTokenProvider jwtTokenProvider;
 
@@ -59,13 +64,22 @@ public class UserService {
     return jwtTokenProvider.createToken(user.getId(), user.getEmail());
   }
 
+  public String addUserTeam(String userId, String userTeamId){
+    User user = getUser(userId);
+    user.addUserTeamId(userTeamId);
+    return userRepository.save(user).getId();
+  }
+
   // 예외 처리 필요
   private User getUser(String userId){
     return userRepository.findById(userId).orElseThrow(RuntimeException::new);
   }
-  public List<String> getTeamList(String userId){
-    User user = getUser(userId);
-    return user.getTeams();
+  public List<TeamListResDto> getTeamList(String userId){
+    Optional<UserTeam> userTeams = userTeamRepository.findByUserId(userId);
+    List<TeamListResDto> teamListResDtos = new ArrayList<>();
+    int idx = 0;
+    userTeams.stream().forEach(userTeam -> teamListResDtos.add(new TeamListResDto(idx, userTeam.getTeamId(), null, userTeam.getTeamName())));
+    return teamListResDtos;
   }
 
   public UserProfileDto getUserProfile(String userId){

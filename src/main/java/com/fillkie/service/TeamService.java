@@ -3,10 +3,13 @@ package com.fillkie.service;
 import com.fillkie.controller.requestDto.CreateTeamReqDto;
 import com.fillkie.domain.Group;
 import com.fillkie.domain.GroupUser;
+import com.fillkie.domain.UserTeam;
 import com.fillkie.domain.teamDomain.Team;
 import com.fillkie.domain.teamDomain.TeamInvite;
 import com.fillkie.repository.GroupRepository;
 import com.fillkie.repository.GroupUserRepository;
+import com.fillkie.repository.UserRepository;
+import com.fillkie.repository.UserTeamRepository;
 import com.fillkie.repository.team.TeamInviteRepository;
 import com.fillkie.repository.team.TeamRepository;
 import com.fillkie.service.dto.TeamDetailDto;
@@ -31,18 +34,29 @@ public class TeamService {
     private final GroupRepository groupRepository;
     private final GroupUserRepository groupUserRepository;
     private final TeamInviteRepository teamInviteRepository;
+    private final UserTeamRepository userTeamRepository;
+    private final UserRepository userRepository;
 
+    /**
+     * team 저장 : userTeamId 반환
+     */
     @Transactional
     public String saveTeam(CreateTeamReqDto createTeamDto, String userId){
         String teamName = createTeamDto.getTeamName();
 
         Team team = Team.builder()
             .name(teamName)
-            .users(new ArrayList<>())
+            .userTeamIds(new ArrayList<>())
             .projects(new ArrayList<>())
             .build();
-        team.addUser(userId);
         team = teamRepository.insert(team);
+
+        UserTeam userTeam = saveUserTeam(userId, team.getId(), teamName);
+
+        team.addUserTeamId(userTeam.getId());
+        team = teamRepository.insert(team);
+
+
 
         Group professor = saveGroup("professor", team.getId(), userId, true);
         Group doctor = saveGroup("doctor", team.getId(), userId, false);
@@ -51,7 +65,9 @@ public class TeamService {
 
         GroupUser groupUser = saveGroupUser(team.getId(), professor.getId(), userId);
 
-        return team.getId();
+
+
+        return userTeam.getId();
 
     }
 
@@ -75,6 +91,15 @@ public class TeamService {
             .userId(userId)
             .build();
         return groupUserRepository.insert(groupUser);
+    }
+
+    private UserTeam saveUserTeam(String userId, String teamId, String teamName){
+        UserTeam userTeam = UserTeam.builder()
+            .userId(userId)
+            .teamId(teamId)
+            .teamName(teamName)
+            .build();
+        return userTeamRepository.insert(userTeam);
     }
 
     // 예외 처리 필요
@@ -109,6 +134,9 @@ public class TeamService {
         return teamInvite.getId();
     }
 
+    /**
+     * 초대 링크 수락 시 실행 : userTeamId 반환
+     */
     // expired 예외 만들어주기
     @Transactional
     public String acceptInviteTeam(String url, String userId) throws ParseException {
@@ -124,11 +152,8 @@ public class TeamService {
             return null;
         }
 
-        // Team에 user 추가
+        // Team 조회
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
-        team.addUser(userId);
-        teamRepository.save(team);
-        log.info("TeamSevice team user 추가 성공 : {}", true);
 
         // Group "intern"에 user 추가
         Group group = groupRepository.findByNameAndTeamId("intern", team.getId()).orElseThrow(RuntimeException::new);
@@ -145,7 +170,19 @@ public class TeamService {
         groupUserRepository.insert(groupUser);
         log.info("TeamSevice groupuser 생성 성공 : {}", true);
 
-        return team.getId();
+        // UserTeam 생성
+        UserTeam userTeam = UserTeam.builder()
+            .userId(userId)
+            .teamId(team.getId())
+            .teamName(team.getName())
+            .build();
+        userTeamRepository.insert(userTeam);
+
+        // Team userTeamId 추가
+        team.addUserTeamId(userTeam.getId());
+        teamRepository.save(team);
+
+        return userTeam.getId();
     }
 
 //    /**
@@ -173,7 +210,7 @@ public class TeamService {
      */
     public TeamDetailDto getTeamDetail(String teamId){
         Team team = getTeam(teamId);
-        return new TeamDetailDto(team.getName(), team.getUsers().size());
+        return new TeamDetailDto(team.getName(), team.getUserTeamIds().size());
     }
 //
 //    public int getTeamHeadcount(String teamId){

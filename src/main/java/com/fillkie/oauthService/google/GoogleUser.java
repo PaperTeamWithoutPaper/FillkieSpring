@@ -41,9 +41,10 @@ public class GoogleUser {
         .email(email)
         .name(name)
         .image(picture)
+        .expired(false)
         .accessToken(accessToken)
         .refreshToken(refreshToken)
-        .teams(new ArrayList<>())
+        .userTeamId(new ArrayList<>())
         .build();
   }
 

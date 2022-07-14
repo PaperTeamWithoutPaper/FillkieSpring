@@ -40,18 +40,19 @@ public class TeamController {
     public ResponseEntity<? extends DefaultResponse> createTeam(@RequestBody @Valid CreateTeamReqDto createTeamDto, HttpServletRequest request){
         String userId = (String) request.getAttribute("id");
         log.info("createTeam userId : {}", userId);
-        String teamId = teamService.saveTeam(createTeamDto, userId);
-        log.info("createTeam teamId : {}", teamId);
+        String userTeamId = teamService.saveTeam(createTeamDto, userId);
+        log.info("createTeam userTeamId : {}", userTeamId);
+        userService.addUserTeam(userId, userTeamId);
 
 
-        if(teamId == null){
+        if(userTeamId == null){
             return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ResponseFail(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "팀 생성 실패!"));
         }else{
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 생성 성공!", teamId));
+                .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 생성 성공!", userId));
         }
 
     }
@@ -70,33 +71,34 @@ public class TeamController {
     public ResponseEntity<? extends DefaultResponse> acceptInviteTeam(@RequestBody @Valid
         AcceptInviteTeamReqDto acceptInviteTeamReqDto, HttpServletRequest request)
         throws ParseException {
-
+        String userId = (String) request.getAttribute("id");
         log.info("TeamController inviteAccept url : {}", acceptInviteTeamReqDto.getUrl());
-        String teamId = teamService.acceptInviteTeam(acceptInviteTeamReqDto.getUrl(),
-            (String) request.getAttribute("id"));
-        log.info("TeamController teamId : {}", teamId);
+        String userTeamId = teamService.acceptInviteTeam(acceptInviteTeamReqDto.getUrl(), userId);
+        log.info("TeamController userTeamId : {}", userTeamId);
+        userService.addUserTeam(userId, userTeamId);
 
-        if(teamId == null){
+        if(userTeamId == null){
             return ResponseEntity
                 .status(HttpStatus.GONE)
                 .body(new ResponseFail(false, HttpStatus.NOT_ACCEPTABLE.value(), "시간 초과!"));
         }else{
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 합류 성공!", teamId));
+                .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 합류 성공!", userTeamId));
         }
 
     }
 
     @GetMapping("list")
-    public ResponseEntity<? extends DefaultResponse> readListTeam(@RequestParam("userId") String userId){
+    public ResponseEntity<? extends DefaultResponse> readListTeam(HttpServletRequest request){
 
-        List<String> teamIdList = userService.getTeamList(userId);
-        List<String> teamNameList = teamService.getTeamNameList(teamIdList);
+        String userId = (String) request.getAttribute("id");
+
+        List<TeamListResDto> teamList = userService.getTeamList(userId);
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(new ResponseSuccess<TeamListResDto>(true, HttpStatus.OK.value(), "팀 리스트!", new TeamListResDto(teamIdList, teamNameList)));
+            .body(new ResponseSuccess<List<TeamListResDto>>(true, HttpStatus.OK.value(), "팀 리스트!", teamList));
     }
 
     @GetMapping("detail")
@@ -107,14 +109,6 @@ public class TeamController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new ResponseSuccess<TeamDetailDto>(true, HttpStatus.OK.value(), "팀 명, 인원수!", teamDetailDto));
-    }
-
-    @GetMapping("test")
-    public ResponseEntity<String> testResponseBody(){
-        String str = "\"test\":\"sexy\"";
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(str);
     }
 
 }

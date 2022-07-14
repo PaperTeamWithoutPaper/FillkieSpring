@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TeamListResDto {
-    private List<String> teamIdList;
-    private List<String> teamNameList;
+    private int idx;
+    private String teamId;
+    private String thumbnail;
+    private String teamName;
 }

@@ -1,14 +1,10 @@
 package com.fillkie.domain;
 
-import com.fillkie.domain.teamDomain.Team;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Set;
 
 @Document(collection = "user")
 @Getter
@@ -19,19 +15,25 @@ public class User {
   private String email;
   private String name;
   private String image;
+  private Boolean expired;
   private String accessToken;
   private String refreshToken;
-  private List<String> teams;
+  private List<String> userTeamIds;
 
 
   @Builder
-  public User(String email, String name, String image, String accessToken, String refreshToken, List<String> teams) {
+  public User(String email, String name, String image, Boolean expired, String accessToken, String refreshToken, List<String> userTeamIds) {
     this.email = email;
     this.name = name;
     this.image = image;
+    this.expired = expired;
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
-    this.teams = teams;
+    this.userTeamIds = userTeamIds;
+  }
+
+  public void addUserTeamId(String userTeamId){
+    userTeamIds.add(userTeamId);
   }
 
   public void setAccessToken(String accessToken) {
