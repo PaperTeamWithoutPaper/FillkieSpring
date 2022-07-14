@@ -70,8 +70,11 @@ public class TeamController {
     public ResponseEntity<? extends DefaultResponse> acceptInviteTeam(@RequestBody @Valid
         AcceptInviteTeamReqDto acceptInviteTeamReqDto, HttpServletRequest request)
         throws ParseException {
+
+        log.info("TeamController inviteAccept url : {}", acceptInviteTeamReqDto.getUrl());
         String teamId = teamService.acceptInviteTeam(acceptInviteTeamReqDto.getUrl(),
             (String) request.getAttribute("id"));
+        log.info("TeamController teamId : {}", teamId);
 
         if(teamId == null){
             return ResponseEntity

@@ -131,6 +131,7 @@ public class TeamService {
         Date access = parseDateTime(accessDateTime);
         // 예외처리 필요
         if((access.getTime() - start.getTime()) / 1000 > 1800){
+            log.info("TeamSevice AcceptInvite Expired url : {}", url);
             return null;
         }
 
@@ -138,11 +139,13 @@ public class TeamService {
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
         team.addUser(userId);
         teamRepository.save(team);
+        log.info("TeamSevice team user 추가 성공 : {}", true);
 
         // Group "intern"에 user 추가
         Group group = groupRepository.findByNameAndTeamId("intern", team.getId()).orElseThrow(RuntimeException::new);
         group.addUser(userId);
         groupRepository.save(group);
+        log.info("TeamSevice group intern 추가 성공 : {}", true);
 
         // GroupUser 생성
         GroupUser groupUser = GroupUser.builder()
@@ -151,6 +154,7 @@ public class TeamService {
             .userId(userId)
             .build();
         groupUserRepository.insert(groupUser);
+        log.info("TeamSevice groupuser 생성 성공 : {}", true);
 
         return team.getId();
     }
