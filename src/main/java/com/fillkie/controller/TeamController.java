@@ -66,7 +66,7 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseSuccess<InviteTeamResDto>(true, HttpStatus.OK.value(), "URL 받아랑!", new InviteTeamResDto(url)));
     }
 
-    @PostMapping("invite/accept/")
+    @PostMapping("invite/accept")
     public ResponseEntity<? extends DefaultResponse> acceptInviteTeam(@RequestBody @Valid
         AcceptInviteTeamReqDto acceptInviteTeamReqDto, HttpServletRequest request)
         throws ParseException {
