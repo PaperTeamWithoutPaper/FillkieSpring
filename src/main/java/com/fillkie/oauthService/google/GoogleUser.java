@@ -44,7 +44,7 @@ public class GoogleUser {
         .expired(false)
         .accessToken(accessToken)
         .refreshToken(refreshToken)
-        .userTeamId(new ArrayList<>())
+        .userTeamIds(new ArrayList<>())
         .build();
   }
 
