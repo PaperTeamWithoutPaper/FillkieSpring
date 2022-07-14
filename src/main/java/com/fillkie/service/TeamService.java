@@ -54,7 +54,7 @@ public class TeamService {
         UserTeam userTeam = saveUserTeam(userId, team.getId(), teamName);
 
         team.addUserTeamId(userTeam.getId());
-        team = teamRepository.insert(team);
+        team = teamRepository.save(team);
 
 
 
