@@ -7,7 +7,6 @@ import com.fillkie.controller.response.ResponseFail;
 import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.responseDto.InviteTeamResDto;
 import com.fillkie.controller.responseDto.TeamListResDto;
-import com.fillkie.controller.responseDto.TeamDetailResDto;
 import com.fillkie.service.TeamService;
 import com.fillkie.service.UserService;
 import com.fillkie.service.dto.TeamDetailDto;

@@ -73,7 +73,7 @@ public class TeamService {
 
     private Group saveGroup(String groupName, String teamId, String userId, boolean flag){
         Group group = Group.builder()
-            .name("professor")
+            .name(groupName)
             .teamId(teamId)
             .users(new ArrayList<>())
             .roles(new ArrayList<>())
