@@ -75,8 +75,8 @@ public class UserService {
     return userRepository.findById(userId).orElseThrow(RuntimeException::new);
   }
   public List<TeamListResDto> getTeamList(String userId){
-    Optional<UserTeam> userTeams = Optional.ofNullable(
-        userTeamRepository.findByUserId(userId).orElseThrow(RuntimeException::new));
+    List<UserTeam> userTeams =
+        userTeamRepository.findByUserId(userId);
     List<TeamListResDto> teamListResDtos = new ArrayList<>();
     int idx = 0;
     userTeams.stream().forEach(userTeam -> teamListResDtos.add(new TeamListResDto(idx, userTeam.getTeamId(), null, userTeam.getTeamName())));
