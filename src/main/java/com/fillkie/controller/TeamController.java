@@ -59,7 +59,7 @@ public class TeamController {
     @GetMapping("invite")
     public ResponseEntity<? extends DefaultResponse> inviteTeam(@RequestParam("teamId") String teamId){
         String url = UUID.randomUUID().toString();
-        url = url.replaceAll("[-]", "");
+        url = url.replaceAll("[-]", "").trim();
 
         teamService.inviteTeam(teamId, url);
 
