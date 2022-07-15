@@ -33,6 +33,8 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
     logger.info(">>> interceptor.preHandle 호출");
     logger.info(">>> interceptor method : {}", request.getMethod());
     logger.info(">>> interceptor 호출 url : {}", request.getRequestURI());
+    logger.info(">>> interceptor ip1 url : {}", request.getRemoteAddr());
+    logger.info(">>> interceptor ip2 url : {}", request.getRemoteHost());
     String token = authorizationExtractor.extract(request, "Bearer");
     if (token.isEmpty()) {
       throw new TokenEmptyException();
