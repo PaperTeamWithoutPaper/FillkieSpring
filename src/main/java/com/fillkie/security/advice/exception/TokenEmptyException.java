@@ -1,6 +1,6 @@
-package com.fillkie.advice.exception;
+package com.fillkie.security.advice.exception;
 
-public class TokenEmptyException extends RuntimeException {
+public class TokenEmptyException extends IllegalArgumentException {
 
   public TokenEmptyException(String msg, Throwable t) {
     super(msg, t);

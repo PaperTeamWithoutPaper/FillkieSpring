@@ -9,7 +9,7 @@ security:
   jwt:
     token:
       secret-key: secret-key
-      expired-length: 120000
+      expired-length: 3600000
 
 oauth:
   google:

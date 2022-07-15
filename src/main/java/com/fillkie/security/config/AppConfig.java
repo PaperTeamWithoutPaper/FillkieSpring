@@ -1,6 +1,7 @@
-package com.fillkie.config;
+package com.fillkie.security.config;
 
-import com.fillkie.config.interceptor.BearerAuthInterceptor;
+import com.fillkie.security.config.interceptor.BearerAuthInterceptor;
+import com.fillkie.security.config.interceptor.RefreshAuthInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -19,16 +20,18 @@ public class AppConfig implements WebMvcConfigurer {
 
   private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);
 
-  private final BearerAuthInterceptor bearerAuthInterceptor;
+//  private final BearerAuthInterceptor bearerAuthInterceptor;
+
+  private final RefreshAuthInterceptor refreshAuthInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     logger.info(">>> 인터셉터 등록");
-    registry.addInterceptor(bearerAuthInterceptor)
+    registry.addInterceptor(refreshAuthInterceptor)
         .order(0)
         // /**로 변경해야 한다.
-        .addPathPatterns("/**")
-        .excludePathPatterns("/user/oauth/**");
+        .addPathPatterns("/user/refresh/**");
+//        .excludePathPatterns("/user/oauth/**");
 //                .addPathPatterns("/api/booking/{bookingId}")
 //                .addPathPatterns("/api/rooms/{userId}/wish/{roomId}");
   }

@@ -1,7 +1,8 @@
-package com.fillkie.config.jwt;
+package com.fillkie.security.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +34,8 @@ public class JwtTokenProvider {
     this.validityInMilliseconds = validityInMilliseconds;
   }
 
-  // 토큰 생성
-  public String createToken(String id, String email) {
+  // Access Token 생성
+  public String createAccessToken(String id, String email) {
 
     //Header 부분 설정
     Map<String, Object> headers = new HashMap<>();
@@ -45,7 +46,32 @@ public class JwtTokenProvider {
 //        claims.put("id", id);
 
     Date now = new Date();
-    Date validity = new Date(now.getTime() + validityInMilliseconds); // 유효기간 계산 (지금으로부터 + 유효시간)
+    Date validity = new Date(now.getTime() + validityInMilliseconds * 2); // 유효기간 계산 (지금으로부터 + 유효시간)
+    logger.info("now: {}", now);
+    logger.info("validity: {}", validity);
+
+    return Jwts.builder()
+        .setHeader(headers)
+        .setClaims(claims) // sub 설정
+        .setIssuedAt(now) // 토큰 발행 일자
+        .setExpiration(validity)
+        .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화방식?
+        .compact();
+  }
+
+  // Refresh Token 생성
+  public String createRefreshToken(String id, String email) {
+
+    //Header 부분 설정
+    Map<String, Object> headers = new HashMap<>();
+    headers.put("typ", "JWT");
+    headers.put("alg", "HS256");
+
+    Claims claims = Jwts.claims().setSubject(id);
+//        claims.put("id", id);
+
+    Date now = new Date();
+    Date validity = new Date(now.getTime() + validityInMilliseconds * 24 * 14); // 유효기간 계산 (지금으로부터 + 유효시간)
     logger.info("now: {}", now);
     logger.info("validity: {}", validity);
 
@@ -72,5 +98,6 @@ public class JwtTokenProvider {
     Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
     return !claims.getBody().getExpiration().before(new Date());
   }
+
 }
 

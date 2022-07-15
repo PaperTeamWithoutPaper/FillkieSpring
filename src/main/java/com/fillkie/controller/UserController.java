@@ -5,6 +5,7 @@ import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.response.TokenResponse;
 import com.fillkie.service.UserService;
+import com.fillkie.service.dto.AccessRefreshDto;
 import com.fillkie.service.dto.UserProfileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -37,12 +38,17 @@ public class UserController {
   public void oauthLogin(@RequestParam("code") String code, HttpServletResponse response)
       throws IOException {
     System.out.println("code : " + code);
-    String token = userService.oauthLogin(code); // access_token 발급 및 검증 실행
+    AccessRefreshDto accessRefreshDto = userService.oauthLogin(code);// access_token 발급 및 검증 실행
     HttpHeaders headers = new HttpHeaders();
-    token = "bearer " + token;
-    String redirect_url = "https://fillkie.com/loginapi?token=" + token;
+    String accessToken = "bearer " + accessRefreshDto.getAccessToken();
+    String refreshToken = "bearer " + accessRefreshDto.getRefreshToken();
+    String redirect_url = "https://fillkie.com/loginapi?access=" + accessToken + "&refresh=" + refreshToken;
     response.sendRedirect(redirect_url);
   }
+
+//  @GetMapping("refresh")
+//  public void
+
 
   @GetMapping("profile")
   public ResponseEntity<? extends DefaultResponse> readProfileUser(HttpServletRequest request){

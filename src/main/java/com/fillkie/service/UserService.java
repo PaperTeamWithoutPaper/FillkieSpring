@@ -1,7 +1,7 @@
 package com.fillkie.service;
 
-import com.fillkie.advice.exception.UserNotFoundException;
-import com.fillkie.config.jwt.JwtTokenProvider;
+import com.fillkie.security.advice.exception.UserNotFoundException;
+import com.fillkie.security.config.jwt.JwtTokenProvider;
 import com.fillkie.controller.responseDto.TeamListResDto;
 import com.fillkie.domain.User;
 import com.fillkie.domain.UserTeam;
@@ -9,6 +9,7 @@ import com.fillkie.oauthService.google.GoogleUser;
 import com.fillkie.oauthService.google.OAuthToken;
 import com.fillkie.repository.UserRepository;
 import com.fillkie.repository.UserTeamRepository;
+import com.fillkie.service.dto.AccessRefreshDto;
 import com.fillkie.service.dto.UserProfileDto;
 import com.fillkie.service.oauth.OAuthService;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class UserService {
 //    }
 
   @Transactional
-  public String oauthLogin(String code) {
+  public AccessRefreshDto oauthLogin(String code) {
     ResponseEntity<String> accessTokenResponse = oauthService.createPostRequest(code);
     OAuthToken oAuthToken = oauthService.getAccessToken(accessTokenResponse);
     logger.info("infos : {}", oAuthToken.toString());
@@ -61,7 +62,7 @@ public class UserService {
     updateToken(user, oAuthToken);
 
     log.info("UserService Login User : {}", user.toString());
-    return jwtTokenProvider.createToken(user.getId(), user.getEmail());
+    return new AccessRefreshDto(jwtTokenProvider.createAccessToken(user.getId(), user.getEmail()), jwtTokenProvider.createRefreshToken(user.getId(), user.getEmail()));
   }
 
   public String addUserTeam(String userId, String userTeamId){

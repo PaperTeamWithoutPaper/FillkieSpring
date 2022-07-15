@@ -1,4 +1,4 @@
-package com.fillkie.advice.exception;
+package com.fillkie.security.advice.exception;
 
 public class UserNotFoundException extends RuntimeException {
 
