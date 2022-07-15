@@ -40,7 +40,7 @@ public class UserController {
     String token = userService.oauthLogin(code); // access_token 발급 및 검증 실행
     HttpHeaders headers = new HttpHeaders();
     token = "bearer " + token;
-    String redirect_url = "http://localhost:3000/loginapi?token=" + token;
+    String redirect_url = "https://fillkie.com/loginapi?token=" + token;
     response.sendRedirect(redirect_url);
   }
 
