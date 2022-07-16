@@ -47,9 +47,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private static final List<String> EXCLUDE_URL =
 		Collections.unmodifiableList(
 			Arrays.asList(
-				"/static/**",
+				"/static/*",
 				"/favicon.ico",
-				"/user/oauth/**",
+				"/user/oauth/*",
 				"/user/refreshToken"
 //				"/admin",
 //				"/admin/authentication",
@@ -75,6 +75,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		logger.info(">>> JwtRequestFilter.doFilterInternal 호출");
 		logger.info(">>> JwtRequestFilter 호출 url : {}", request.getRequestURI());
 		logger.info(">>> JwtRequestFilter ip1 url : {}", request.getRemoteAddr());
+		request.getHeaderNames().asIterator()
+			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
 		String testToken = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
 		log.info("JwtRequestFilter accessToken : {}", testToken);
 		log.info("JwTRequestFilter userId : {}", jwtTokenProvider.getSubject(testToken));
