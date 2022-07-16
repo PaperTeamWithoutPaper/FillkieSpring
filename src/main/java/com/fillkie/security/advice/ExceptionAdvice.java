@@ -25,6 +25,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected ResponseEntity<? extends DefaultResponse> handleTokenEmptyException(
         HttpServletRequest request, TokenEmptyException e){
+        log.error("request URI", request.getRequestURI());
         log.error("TokenEmptyException : exceptionHandler 호출");
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
@@ -35,6 +36,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(AccessTokenExpiredException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected ResponseEntity<? extends DefaultResponse> handleAccessTokenExpiredException(HttpServletRequest request, AccessTokenExpiredException e){
+        log.error("request URI", request.getRequestURI());
         log.error("AccessTokenExpiredException : exceptionHandler 호출");
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
@@ -45,6 +47,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(RefreshTokenExpiredException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected ResponseEntity<? extends DefaultResponse> handleRefreshTokenExpiredException(HttpServletRequest request, RefreshTokenExpiredException e){
+        log.error("request URI", request.getRequestURI());
         log.error("RefreshTokenExpiredException : exceptionHandler 호출");
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)

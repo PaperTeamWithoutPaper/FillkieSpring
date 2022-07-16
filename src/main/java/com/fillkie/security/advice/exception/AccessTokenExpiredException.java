@@ -1,8 +1,5 @@
 package com.fillkie.security.advice.exception;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.JwtException;
 
 public class AccessTokenExpiredException extends JwtException {
