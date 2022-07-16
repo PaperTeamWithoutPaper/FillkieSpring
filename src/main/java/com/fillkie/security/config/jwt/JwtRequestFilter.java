@@ -99,7 +99,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private boolean isLoginCheckPath(HttpServletRequest request) {
 		return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
 	}
-	
+
+	/**
+	 * OncePerRequestFilter에서도 이 화이트리스트 탐지하지 않는다
+	 */
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
