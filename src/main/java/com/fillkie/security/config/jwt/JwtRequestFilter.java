@@ -124,6 +124,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	 */
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return !PatternMatchUtils.simpleMatch(String.valueOf(EXCLUDE_URL), request.getServletPath());
+		return PatternMatchUtils.simpleMatch(String.valueOf(EXCLUDE_URL), request.getServletPath());
 	}
 }
