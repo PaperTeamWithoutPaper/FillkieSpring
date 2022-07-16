@@ -84,7 +84,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
 
 		// jwt 헤더 사용 시
-		if(isLoginCheckPath(request)) {
+		if(!isLoginCheckPath(request)) {
 
 			String token = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
 
