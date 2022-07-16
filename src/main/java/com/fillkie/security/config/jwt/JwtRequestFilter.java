@@ -77,11 +77,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		logger.info(">>> JwtRequestFilter ip1 url : {}", request.getRemoteAddr());
 		request.getHeaderNames().asIterator()
 			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
-		String testToken = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
-		log.info("JwtRequestFilter accessToken : {}", testToken);
-		log.info("JwTRequestFilter userId : {}", jwtTokenProvider.getSubject(testToken));
-		request.getHeaderNames().asIterator()
-			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
+//		String testToken = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
+//		log.info("JwtRequestFilter accessToken : {}", testToken);
+//		log.info("JwTRequestFilter userId : {}", jwtTokenProvider.getSubject(testToken));
+//		request.getHeaderNames().asIterator()
+//			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
 
 		// jwt 헤더 사용 시
 		if(isLoginCheckPath(request)) {
