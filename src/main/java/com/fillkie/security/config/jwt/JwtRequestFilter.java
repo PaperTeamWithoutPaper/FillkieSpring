@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
@@ -39,7 +40,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	private final AuthorizationExtractor authorizationExtractor;
-	
+
 	// 포함하지 않을 url
 	private static final List<String> EXCLUDE_URL =
 		Collections.unmodifiableList(
@@ -70,24 +71,33 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //				.orElse(null);
 
 		// jwt 헤더 사용 시
-		String token = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
+		if(isLoginCheckPath(request)) {
 
-		// 토큰이 없으므로 로그인하여 access, refresh token 발급
-		// 가려던 주소로 리다이렉트
-		if (token.isEmpty()) {
-			throw new TokenEmptyException("토큰이 없습니다!");
+			String token = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
+
+			// 토큰이 없으므로 로그인하여 access, refresh token 발급
+			// 가려던 주소로 리다이렉트
+			if (token.isEmpty()) {
+				throw new TokenEmptyException("토큰이 없습니다!");
+			}
+
+			// 시간 만료로 refresh token 요청 응답
+			if (!jwtTokenProvider.validateToken(token)) {
+				throw new AccessTokenExpiredException("AccessToken이 만료되었습니다!");
+			}
+
+			String id = jwtTokenProvider.getSubject(token);
+			log.info("JwtRequestFilter userId : {}", id);
+			request.setAttribute("id", id);
 		}
-
-		// 시간 만료로 refresh token 요청 응답
-		if (!jwtTokenProvider.validateToken(token)) {
-			throw new AccessTokenExpiredException("AccessToken이 만료되었습니다!");
-		}
-
-		String id = jwtTokenProvider.getSubject(token);
-		log.info("JwtRequestFilter userId : {}", id);
-		request.setAttribute("id", id);
-		
 		filterChain.doFilter(request,response);
+	}
+
+	/**
+	 * 화이트 리스트의 경우 인증 체크X
+	 */
+	private boolean isLoginCheckPath(HttpServletRequest request) {
+		return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
 	}
 	
 	@Override
