@@ -60,6 +60,7 @@ public class UserController {
   @GetMapping("profile")
   public ResponseEntity<? extends DefaultResponse> readProfileUser(HttpServletRequest request){
     String userId = (String) request.getAttribute("id");
+    log.info("UserController profile userId : {}", userId);
 
     UserProfileDto userProfile = userService.getUserProfile(userId);
 
