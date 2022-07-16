@@ -89,7 +89,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
 
 		// jwt 헤더 사용 시
-		if(!isLoginCheckPath(request)) {
+		if(isLoginCheckPath(request)) {
 
 			String token = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
 
@@ -116,7 +116,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	 * 화이트 리스트에 있는 경우 true 반환
 	 */
 	private boolean isLoginCheckPath(HttpServletRequest request) {
-		return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
+		return !PatternMatchUtils.simpleMatch(whitelist, request.getServletPath());
 	}
 
 	/**
@@ -124,6 +124,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	 */
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
+		return !PatternMatchUtils.simpleMatch(String.valueOf(EXCLUDE_URL), request.getServletPath());
 	}
 }
