@@ -47,10 +47,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private static final List<String> EXCLUDE_URL =
 		Collections.unmodifiableList(
 			Arrays.asList(
-				"/static/*",
+				"/static/**",
 				"/favicon.ico",
-				"/user/oauth/*",
-				"/user/refreshToken/*"
+				"/user/oauth/**",
+				"/user/refreshToken"
 //				"/admin",
 //				"/admin/authentication",
 //				"/admin/refresh",
