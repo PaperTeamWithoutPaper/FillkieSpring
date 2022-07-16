@@ -75,6 +75,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		logger.info(">>> JwtRequestFilter.doFilterInternal 호출");
 		logger.info(">>> JwtRequestFilter 호출 url : {}", request.getRequestURI());
 		logger.info(">>> JwtRequestFilter ip1 url : {}", request.getRemoteAddr());
+		String testToken = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
+		log.info("JwtRequestFilter accessToken : {}", testToken);
+		log.info("JwTRequestFilter userId : {}", jwtTokenProvider.getSubject(testToken));
 
 		// jwt 헤더 사용 시
 		if(isLoginCheckPath(request)) {
