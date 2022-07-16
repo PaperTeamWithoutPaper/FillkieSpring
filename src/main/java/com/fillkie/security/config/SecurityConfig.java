@@ -1,18 +1,15 @@
-package com.fillkie.config;
+package com.fillkie.security.config;
 
+import com.fillkie.security.config.jwt.JwtRequestFilter;
+import com.fillkie.security.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -20,6 +17,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
   private final CorsConfig corsConfig;
+  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+  private final JwtRequestFilter jwtRequestFilter;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -27,6 +26,7 @@ public class SecurityConfig {
     http.csrf().disable();
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
         // @CrossOrigin은 인증이 없을 때 실행되고 시큐리티 필터에 필터를 등록해야 인증이 있을 때 실행된다.
         // 이걸로 이제 요청 시 시큐리티의 로그인 창이 뜨지 않는다.
         .addFilter(corsConfig.corsFilter())
@@ -47,7 +47,10 @@ public class SecurityConfig {
         .access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
         .antMatchers("/api/v1/admin/**")
         .access("hasRole('ROLE_ADMIN')")
-        .anyRequest().permitAll();
+        .anyRequest().permitAll()
+        .and()
+        .exceptionHandling()
+        .authenticationEntryPoint(jwtAuthenticationEntryPoint);
     return http.build();
   }
 }

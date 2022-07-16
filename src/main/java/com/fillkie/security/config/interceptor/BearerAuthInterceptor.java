@@ -1,8 +1,8 @@
-package com.fillkie.config.interceptor;
+package com.fillkie.security.config.interceptor;
 
-import com.fillkie.advice.exception.TokenEmptyException;
-import com.fillkie.config.auth.AuthorizationExtractor;
-import com.fillkie.config.jwt.JwtTokenProvider;
+import com.fillkie.security.advice.exception.TokenEmptyException;
+import com.fillkie.security.config.auth.AuthorizationExtractor;
+import com.fillkie.security.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -23,6 +23,7 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
 
   private static final Logger logger = LoggerFactory.getLogger(BearerAuthInterceptor.class);
 
+  private static final String AUTHORIZATION = "Authorization";
   private final AuthorizationExtractor authorizationExtractor;
   private final JwtTokenProvider jwtTokenProvider;
 
@@ -35,7 +36,7 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
     logger.info(">>> interceptor 호출 url : {}", request.getRequestURI());
     logger.info(">>> interceptor ip1 url : {}", request.getRemoteAddr());
     logger.info(">>> interceptor ip2 url : {}", request.getRemoteHost());
-    String token = authorizationExtractor.extract(request, "Bearer");
+    String token = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
     if (token.isEmpty()) {
       throw new TokenEmptyException();
     }

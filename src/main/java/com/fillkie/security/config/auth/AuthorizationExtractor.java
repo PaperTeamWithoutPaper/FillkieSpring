@@ -1,4 +1,4 @@
-package com.fillkie.config.auth;
+package com.fillkie.security.config.auth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -11,13 +11,12 @@ import java.util.Enumeration;
 @Slf4j
 public class AuthorizationExtractor {
 
-  public static final String AUTHORIZATION = "Authorization";
   public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName();
 
-  public String extract(HttpServletRequest request, String type) {
+  public String extract(HttpServletRequest request, String type, String header) {
 //    request.getHeaderNames().asIterator()
 //        .forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
-    Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+    Enumeration<String> headers = request.getHeaders(header);
     while (headers.hasMoreElements()) {
       String value = headers.nextElement();
       if (value.toLowerCase().startsWith(type.toLowerCase())) {
