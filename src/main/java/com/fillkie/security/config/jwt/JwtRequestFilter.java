@@ -59,7 +59,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //				"/admin/loginView",
 //				"/admin/login"
 			));
-	
+
+	// JwtRequestFilter 전용
+	private static final String[] whitelist = {"/static/*", "/favicon.ico", "/user/oauth/*", "/user/refreshToken"};
+
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
@@ -75,6 +79,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		logger.info(">>> JwtRequestFilter.doFilterInternal 호출");
 		logger.info(">>> JwtRequestFilter 호출 url : {}", request.getRequestURI());
 		logger.info(">>> JwtRequestFilter ip1 url : {}", request.getRemoteAddr());
+		log.info(">>> JwtRequestFilter ServletPath : {}", request.getServletPath());
 		request.getHeaderNames().asIterator()
 			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
 //		String testToken = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
