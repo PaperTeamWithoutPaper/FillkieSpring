@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -31,8 +32,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final String AUTHORIZATION = "Authorization";
 
@@ -70,6 +72,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //				.findFirst() .map(Cookie::getValue)
 //				.orElse(null);
 
+		logger.info(">>> JwtRequestFilter.doFilterInternal 호출");
+		logger.info(">>> JwtRequestFilter 호출 url : {}", request.getRequestURI());
+		logger.info(">>> JwtRequestFilter ip1 url : {}", request.getRemoteAddr());
+
 		// jwt 헤더 사용 시
 		if(isLoginCheckPath(request)) {
 
@@ -95,6 +101,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	/**
 	 * 화이트 리스트의 경우 인증 체크X
+	 * 화이트 리스트에 있는 경우 true 반환
 	 */
 	private boolean isLoginCheckPath(HttpServletRequest request) {
 		return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
