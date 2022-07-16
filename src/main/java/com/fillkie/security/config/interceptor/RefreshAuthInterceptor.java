@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * RefreshToken 검증 Interceptor
+ * UserController : checkRefreshTokenUser
  */
 @Component
 @RequiredArgsConstructor
@@ -32,11 +33,11 @@ public class RefreshAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) {
-        logger.info(">>> interceptor.preHandle 호출");
-        logger.info(">>> interceptor method : {}", request.getMethod());
-        logger.info(">>> interceptor 호출 url : {}", request.getRequestURI());
-        logger.info(">>> interceptor ip1 url : {}", request.getRemoteAddr());
-        logger.info(">>> interceptor ip2 url : {}", request.getRemoteHost());
+        logger.info(">>> refreshInterceptor.preHandle 호출");
+        logger.info(">>> refreshInterceptor method : {}", request.getMethod());
+        logger.info(">>> refreshInterceptor 호출 url : {}", request.getRequestURI());
+        logger.info(">>> refreshInterceptor ip1 url : {}", request.getRemoteAddr());
+        logger.info(">>> refreshInterceptor ip2 url : {}", request.getRemoteHost());
         String token = authorizationExtractor.extract(request, "Bearer", REFRESH);
 
 
@@ -53,7 +54,9 @@ public class RefreshAuthInterceptor implements HandlerInterceptor {
 
         String id = jwtTokenProvider.getSubject(token);
         log.info("interceptor id : {}", id);
+        String accessToken = jwtTokenProvider.createAccessToken(id, null);
         request.setAttribute("id", id);
+        request.setAttribute("newToken", accessToken);
         return true;
     }
 
