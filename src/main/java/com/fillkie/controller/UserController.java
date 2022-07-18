@@ -43,7 +43,7 @@ public class UserController {
     HttpHeaders headers = new HttpHeaders();
     String accessToken = "bearer " + accessRefreshDto.getAccessToken();
     String refreshToken = "bearer " + accessRefreshDto.getRefreshToken();
-    String redirect_url = "https://fillkie.com/loginapi?access=" + accessToken + "&refresh=" + refreshToken;
+    String redirect_url = "http://localhost:3000/loginapi?access=" + accessToken + "&refresh=" + refreshToken;
     response.sendRedirect(redirect_url);
   }
 

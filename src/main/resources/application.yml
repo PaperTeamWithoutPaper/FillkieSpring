@@ -25,4 +25,4 @@ logging:
     root: info
 
 server:
-  port: 80
+  port: 8080
