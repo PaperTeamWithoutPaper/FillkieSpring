@@ -159,7 +159,7 @@ public class TeamService {
         if(isJoinedUserTeam(userId, team.getId())){
            return null;
         }
-
+        System.out.println("validateUrl teamId : " + team.getId() + "teamName : " + team.getName());
         return new ValidateUrlResDto(team.getName());
 
     }
