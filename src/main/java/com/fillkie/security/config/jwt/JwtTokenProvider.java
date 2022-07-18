@@ -2,7 +2,6 @@ package com.fillkie.security.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +24,14 @@ public class JwtTokenProvider {
 
   private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-  private String secretKey;
+  private String accessKey;
+  private String refreshKey;
   private long validityInMilliseconds;
 
-  public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
+  public JwtTokenProvider(@Value("${security.jwt.token.secret-key.access}") String accessKey, @Value("${security.jwt.token.secret-key.refresh}") String refreshKey,
       @Value("${security.jwt.token.expired-length}") long validityInMilliseconds) {
-    this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    this.accessKey = Base64.getEncoder().encodeToString(accessKey.getBytes());
+    this.refreshKey = Base64.getEncoder().encodeToString(refreshKey.getBytes());
     this.validityInMilliseconds = validityInMilliseconds;
   }
 
@@ -55,7 +56,7 @@ public class JwtTokenProvider {
         .setClaims(claims) // sub 설정
         .setIssuedAt(now) // 토큰 발행 일자
         .setExpiration(validity)
-        .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화방식?
+        .signWith(SignatureAlgorithm.HS256, accessKey) // 암호화방식?
         .compact();
   }
 
@@ -80,22 +81,34 @@ public class JwtTokenProvider {
         .setClaims(claims) // sub 설정
         .setIssuedAt(now) // 토큰 발행 일자
         .setExpiration(validity)
-        .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화방식?
+        .signWith(SignatureAlgorithm.HS256, refreshKey) // 암호화방식?
         .compact();
   }
 
   // 토큰에서 값 추출
-  public String getSubject(String token) {
+  public String getSubject(String token, String type) {
+    String key;
+    if(type.equals("Access")){
+      key = accessKey;
+    }else{
+      key = refreshKey;
+    }
     return String.valueOf(Jwts.parser()
-        .setSigningKey(secretKey)
+        .setSigningKey(accessKey)
         .parseClaimsJws(token)
         .getBody()
         .getSubject());
   }
 
   // 유효한 토큰인지 확인
-  public boolean validateToken(String token) {
-    Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+  public boolean validateToken(String token, String type) {
+    String key;
+    if(type.equals("Access")){
+      key = accessKey;
+    }else{
+      key = refreshKey;
+    }
+    Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token);
     return !claims.getBody().getExpiration().before(new Date());
   }
 

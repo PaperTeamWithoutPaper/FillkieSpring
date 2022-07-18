@@ -37,8 +37,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final String AUTHORIZATION = "Authorization";
-
-
+	private static final String ACCESS = "Access";
 	private final JwtTokenProvider jwtTokenProvider;
 
 	private final AuthorizationExtractor authorizationExtractor;
@@ -100,11 +99,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			}
 
 			// 시간 만료로 refresh token 요청 응답
-			if (!jwtTokenProvider.validateToken(token)) {
+			if (!jwtTokenProvider.validateToken(token, ACCESS)) {
 				throw new AccessTokenExpiredException("AccessToken이 만료되었습니다!");
 			}
 
-			String id = jwtTokenProvider.getSubject(token);
+			String id = jwtTokenProvider.getSubject(token, ACCESS);
 			log.info("JwtRequestFilter userId : {}", id);
 			request.setAttribute("id", id);
 		}

@@ -1,6 +1,7 @@
 package com.fillkie.service;
 
 import com.fillkie.controller.requestDto.CreateTeamReqDto;
+import com.fillkie.controller.responseDto.ValidateUrlResDto;
 import com.fillkie.domain.Group;
 import com.fillkie.domain.GroupUser;
 import com.fillkie.domain.UserTeam;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -109,25 +111,25 @@ public class TeamService {
     }
 
     // 예외 처리 필요
-    private List<Team> getTeamList(List<String> teamIds){
-        List<Team> teams = new ArrayList<>();
-        for(String teamId : teamIds){
-            Team team = teamRepository.findById(teamId).orElseThrow(RuntimeException::new);
-            teams.add(team);
-        }
-        return teams;
-    }
+//    private List<Team> getTeamList(List<String> teamIds){
+//        List<Team> teams = new ArrayList<>();
+//        for(String teamId : teamIds){
+//            Team team = teamRepository.findById(teamId).orElseThrow(RuntimeException::new);
+//            teams.add(team);
+//        }
+//        return teams;
+//    }
 
     @Transactional
     public String inviteTeam(String teamId, String url){
 
-        String startDateTime = getCurrentTime();
+        Long expiryDate = getCurrentTimeMillis() + 1800000;
 
         // 초대 url 저장
         TeamInvite teamInvite = TeamInvite.builder()
             .teamId(teamId)
             .url(url)
-            .startDateTime(startDateTime)
+            .expiryDate(expiryDate)
             .build();
         teamInvite = teamInviteRepository.insert(teamInvite);
 
@@ -135,22 +137,47 @@ public class TeamService {
     }
 
     /**
-     * 초대 링크 수락 시 실행 : userTeamId 반환
+     * Url Validation
      */
-    // expired 예외 만들어주기
-    @Transactional
-    public String acceptInviteTeam(String url, String userId) throws ParseException {
+    // 예외처리로 팀이 앖거나 url이 만료되었다고 한다.
+    public ValidateUrlResDto validateUrl(String userId, String url){
         TeamInvite teamInvite = teamInviteRepository.findByUrl(url).orElseThrow(RuntimeException::new);
+        Long expiryDate = teamInvite.getExpiryDate();
+        Long accessDate = getCurrentTimeMillis();
 
-        String startDateTime = teamInvite.getStartDateTime();
-        String accessDateTime = getCurrentTime();
-        Date start = parseDateTime(startDateTime);
-        Date access = parseDateTime(accessDateTime);
-        // 예외처리 필요
-        if((access.getTime() - start.getTime()) / 1000 > 1800){
+        // 예외 처리 필요
+        // 초대 만료 시간 초과 경우
+        if(expiryDate - accessDate < 0){
             log.info("TeamSevice AcceptInvite Expired url : {}", url);
             return null;
         }
+
+        Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
+
+        // 예외 처리 필요
+        // 이미 팀에 가입된 사람인 경우
+        if(isJoinedUserTeam(userId, team.getId())){
+           return null;
+        }
+
+        return new ValidateUrlResDto(team.getName());
+
+    }
+
+    private boolean isJoinedUserTeam(String userId, String teamId){
+        Optional<UserTeam> userTeam = userTeamRepository.findByUserIdAndTeamId(userId, teamId);
+        return userTeam.isPresent();
+    }
+
+    /**
+     * 초대 링크 수락 시 실행 : userTeamId 반환
+     */
+    // 각 객체에 대해 삭제되었을 경우의 예외를 생성해야 한다.
+    // 팀이 삭제되었는데 url이 유효한 경우 예외 처리 해야 한다.
+    @Transactional
+    public String acceptInviteTeam(String userId, String url) throws ParseException {
+        // TeamInvite 조회
+        TeamInvite teamInvite = teamInviteRepository.findByUrl(url).orElseThrow(RuntimeException::new);
 
         // Team 조회
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
@@ -198,12 +225,12 @@ public class TeamService {
     /**
      * user의 팀들 이름 반환
      */
-    public List<String> getTeamNameList(List<String> teamIds){
-        List<Team> teamList = getTeamList(teamIds);
-        List<String> teamNameList = new ArrayList<>();
-        teamList.stream().forEach(team -> teamNameList.add(team.getName()));
-        return teamNameList;
-    }
+//    public List<String> getTeamNameList(List<String> teamIds){
+//        List<Team> teamList = getTeamList(teamIds);
+//        List<String> teamNameList = new ArrayList<>();
+//        teamList.stream().forEach(team -> teamNameList.add(team.getName()));
+//        return teamNameList;
+//    }
 
     /**
      * team의 이름, 인원수 반환
@@ -226,10 +253,11 @@ public class TeamService {
     /**
      * 현재 시간 String 반환
      */
-    private String getCurrentTime(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+    private Long getCurrentTimeMillis(){
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
         Calendar now = Calendar.getInstance();
-        return dateFormat.format(now.getTime());
+//        return dateFormat.format(now.getTime());
+        return now.getTimeInMillis();
     }
 
     /**

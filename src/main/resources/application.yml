@@ -8,7 +8,9 @@ spring:
 security:
   jwt:
     token:
-      secret-key: secret-key
+      secret-key:
+        access: secret-key
+        refresh: secret-key
       expired-length: 3600000
 
 oauth:
@@ -25,4 +27,4 @@ logging:
     root: info
 
 server:
-  port: 8080
+  port: 80
