@@ -149,7 +149,7 @@ public class TeamService {
         // 초대 만료 시간 초과 경우
         if(expiryDate - accessDate < 0){
             log.info("TeamSevice AcceptInvite Expired url : {}", url);
-            return null;
+            return new ValidateUrlResDto(null);
         }
 
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
@@ -157,7 +157,7 @@ public class TeamService {
         // 예외 처리 필요
         // 이미 팀에 가입된 사람인 경우
         if(isJoinedUserTeam(userId, team.getId())){
-           return null;
+           return new ValidateUrlResDto(null);
         }
         System.out.println("validateUrl teamId : " + team.getId() + "teamName : " + team.getName());
         return new ValidateUrlResDto(team.getName());

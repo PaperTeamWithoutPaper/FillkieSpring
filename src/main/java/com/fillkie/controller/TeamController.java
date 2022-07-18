@@ -75,7 +75,7 @@ public class TeamController {
         log.info("TeamController validateUrl teamName : {}", validateUrlResDto.getTeamName());
 
         // 예외 처리로 해결한다.
-        if(validateUrlResDto == null){
+        if(validateUrlResDto.getTeamName() == null){
             return ResponseEntity
                 .status(HttpStatus.REQUEST_TIMEOUT)
                 .body(new ResponseFail(false, HttpStatus.REQUEST_TIMEOUT.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
