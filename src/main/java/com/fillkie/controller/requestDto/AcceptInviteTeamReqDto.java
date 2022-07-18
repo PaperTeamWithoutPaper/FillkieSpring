@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * TeamController : acceptInviteTeam
+ * TeamController : acceptInviteTeam, validateUrl
  */
 @Data
 public class AcceptInviteTeamReqDto {

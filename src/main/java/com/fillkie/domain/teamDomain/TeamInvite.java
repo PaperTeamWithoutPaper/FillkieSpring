@@ -1,6 +1,5 @@
 package com.fillkie.domain.teamDomain;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -14,13 +13,13 @@ public class TeamInvite {
     private String id;
     private String teamId;
     private String url;
-    private String startDateTime;
+    private Long expiryDate;
 
     @Builder
-    public TeamInvite(String teamId, String url, String startDateTime) {
+    public TeamInvite(String teamId, String url, Long expiryDate) {
         this.teamId = teamId;
         this.url = url;
-        this.startDateTime = startDateTime;
+        this.expiryDate = expiryDate;
     }
 
 }

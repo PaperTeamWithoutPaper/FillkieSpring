@@ -48,11 +48,11 @@ public class RefreshAuthInterceptor implements HandlerInterceptor {
 
         // RefreshToken 만료
         // exception으로 로그인 페이지로 간다
-        if (!jwtTokenProvider.validateToken(token)) {
+        if (!jwtTokenProvider.validateToken(token, REFRESH)) {
             throw new RefreshTokenExpiredException("RefreshToken이 만료되었습니다!");
         }
 
-        String id = jwtTokenProvider.getSubject(token);
+        String id = jwtTokenProvider.getSubject(token, REFRESH);
         log.info("interceptor id : {}", id);
         String accessToken = jwtTokenProvider.createAccessToken(id, null);
         request.setAttribute("id", id);

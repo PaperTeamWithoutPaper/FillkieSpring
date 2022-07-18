@@ -7,6 +7,7 @@ import com.fillkie.controller.response.ResponseFail;
 import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.responseDto.InviteTeamResDto;
 import com.fillkie.controller.responseDto.TeamListResDto;
+import com.fillkie.controller.responseDto.ValidateUrlResDto;
 import com.fillkie.service.TeamService;
 import com.fillkie.service.UserService;
 import com.fillkie.service.dto.TeamDetailDto;
@@ -66,13 +67,33 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseSuccess<InviteTeamResDto>(true, HttpStatus.OK.value(), "URL 받아랑!", new InviteTeamResDto(url)));
     }
 
+    @GetMapping("invite/validation")
+    public ResponseEntity<? extends DefaultResponse> validateUrl(@RequestBody @Valid AcceptInviteTeamReqDto acceptInviteTeamReqDto, HttpServletRequest request){
+        String userId = (String) request.getAttribute("id");
+        log.info("TeamController validateUrl url : {}", acceptInviteTeamReqDto.getUrl());
+        ValidateUrlResDto validateUrlResDto = teamService.validateUrl(userId, acceptInviteTeamReqDto.getUrl());
+        log.info("TeamController validateUrl teamName : {}", validateUrlResDto.getTeamName());
+
+        // 예외 처리로 해결한다.
+        if(validateUrlResDto == null){
+            return ResponseEntity
+                .status(HttpStatus.REQUEST_TIMEOUT)
+                .body(new ResponseFail(false, HttpStatus.REQUEST_TIMEOUT.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
+        }else{
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseSuccess<ValidateUrlResDto>(false, HttpStatus.OK.value(), "수락해주세요!", validateUrlResDto));
+        }
+
+    }
+
     @PostMapping("invite/accept")
     public ResponseEntity<? extends DefaultResponse> acceptInviteTeam(@RequestBody @Valid
         AcceptInviteTeamReqDto acceptInviteTeamReqDto, HttpServletRequest request)
         throws ParseException {
         String userId = (String) request.getAttribute("id");
         log.info("TeamController inviteAccept url : {}", acceptInviteTeamReqDto.getUrl());
-        String userTeamId = teamService.acceptInviteTeam(acceptInviteTeamReqDto.getUrl(), userId);
+        String userTeamId = teamService.acceptInviteTeam(userId, acceptInviteTeamReqDto.getUrl());
         log.info("TeamController userTeamId : {}", userTeamId);
         userService.addUserTeam(userId, userTeamId);
 
@@ -85,7 +106,6 @@ public class TeamController {
                 .status(HttpStatus.OK)
                 .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 합류 성공!", userTeamId));
         }
-
     }
 
     @GetMapping("list")
