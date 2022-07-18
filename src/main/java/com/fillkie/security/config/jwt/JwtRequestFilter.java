@@ -81,7 +81,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		logger.info(">>> JwtRequestFilter ip1 url : {}", request.getRemoteAddr());
 		log.info(">>> JwtRequestFilter ServletPath : {}", request.getServletPath());
 		request.getHeaderNames().asIterator()
-			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
+			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getAttribute(header)));
 //		String testToken = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
 //		log.info("JwtRequestFilter accessToken : {}", testToken);
 //		log.info("JwTRequestFilter userId : {}", jwtTokenProvider.getSubject(testToken));
