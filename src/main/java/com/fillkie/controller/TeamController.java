@@ -68,10 +68,10 @@ public class TeamController {
     }
 
     @GetMapping("invite/validation")
-    public ResponseEntity<? extends DefaultResponse> validateUrl(@RequestBody @Valid AcceptInviteTeamReqDto acceptInviteTeamReqDto, HttpServletRequest request){
+    public ResponseEntity<? extends DefaultResponse> validateUrl(@RequestParam("url") @Valid String url, HttpServletRequest request){
         String userId = (String) request.getAttribute("id");
-        log.info("TeamController validateUrl url : {}", acceptInviteTeamReqDto.getUrl());
-        ValidateUrlResDto validateUrlResDto = teamService.validateUrl(userId, acceptInviteTeamReqDto.getUrl());
+        log.info("TeamController validateUrl url : {}", url);
+        ValidateUrlResDto validateUrlResDto = teamService.validateUrl(userId, url);
         log.info("TeamController validateUrl teamName : {}", validateUrlResDto.getTeamName());
 
         // 예외 처리로 해결한다.
