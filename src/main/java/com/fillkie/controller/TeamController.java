@@ -67,7 +67,7 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseSuccess<InviteTeamResDto>(true, HttpStatus.OK.value(), "URL 받아랑!", new InviteTeamResDto(url)));
     }
 
-    @GetMapping("invite/validation")
+    @GetMapping("invite/detail")
     public ResponseEntity<? extends DefaultResponse> inviteTeamDetail(@RequestParam("url") @Valid String url, HttpServletRequest request){
         String userId = (String) request.getAttribute("id");
 
