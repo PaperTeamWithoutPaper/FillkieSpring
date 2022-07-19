@@ -73,7 +73,9 @@ public class TeamController {
 
         InviteTeamDetail inviteTeamDetail = teamService.validateUrl(userId, url);
         log.info("TeamController validateUrl url : {}", url);
-        log.info("TeamController validateUrl teamName : {}", inviteTeamDetail.getTeamName());
+        if(inviteTeamDetail != null){
+            log.info("TeamController validateUrl teamName : {}", inviteTeamDetail.getTeamName());
+        }
 
         // 예외 처리로 해결한다.
         if(inviteTeamDetail == null){
