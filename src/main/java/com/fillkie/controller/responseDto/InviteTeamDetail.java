@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * TeamController : validateUrl
+ * TeamController : inviteTeamDetail
  */
 @Data
 @AllArgsConstructor
-public class ValidateUrlResDto {
+public class InviteTeamDetail {
     private String teamName;
+//    private String image;
 }

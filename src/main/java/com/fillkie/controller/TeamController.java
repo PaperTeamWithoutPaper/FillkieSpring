@@ -7,7 +7,7 @@ import com.fillkie.controller.response.ResponseFail;
 import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.responseDto.InviteTeamResDto;
 import com.fillkie.controller.responseDto.TeamListResDto;
-import com.fillkie.controller.responseDto.ValidateUrlResDto;
+import com.fillkie.controller.responseDto.InviteTeamDetail;
 import com.fillkie.service.TeamService;
 import com.fillkie.service.UserService;
 import com.fillkie.service.dto.TeamDetailDto;
@@ -68,39 +68,45 @@ public class TeamController {
     }
 
     @GetMapping("invite/validation")
-    public ResponseEntity<? extends DefaultResponse> validateUrl(@RequestParam("url") @Valid String url, HttpServletRequest request){
+    public ResponseEntity<? extends DefaultResponse> inviteTeamDetail(@RequestParam("url") @Valid String url, HttpServletRequest request){
         String userId = (String) request.getAttribute("id");
+
+        InviteTeamDetail inviteTeamDetail = teamService.getTeamName(userId, url);
         log.info("TeamController validateUrl url : {}", url);
-        ValidateUrlResDto validateUrlResDto = teamService.validateUrl(userId, url);
-        log.info("TeamController validateUrl teamName : {}", validateUrlResDto.getTeamName());
+        log.info("TeamController validateUrl teamName : {}", inviteTeamDetail.getTeamName());
 
         // 예외 처리로 해결한다.
-        if(validateUrlResDto.getTeamName() == null){
-            return ResponseEntity
-                .status(HttpStatus.REQUEST_TIMEOUT)
-                .body(new ResponseFail(false, HttpStatus.REQUEST_TIMEOUT.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
-        }else{
+        // 아직은 초대 url을 삭제하지 않기 때문에 항상 team 객체가 존재하여 예외처리 필요없다.
+//        if(inviteTeamDetail.getTeamName() == null){
+//            return ResponseEntity
+//                .status(HttpStatus.REQUEST_TIMEOUT)
+//                .body(new ResponseFail(false, HttpStatus.REQUEST_TIMEOUT.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
+//        }else{
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseSuccess<ValidateUrlResDto>(false, HttpStatus.OK.value(), "수락해주세요!", validateUrlResDto));
-        }
+                .body(new ResponseSuccess<InviteTeamDetail>(false, HttpStatus.OK.value(), "수락해주세요!", inviteTeamDetail));
+//        }
 
     }
 
     @PostMapping("invite/accept")
-    public ResponseEntity<? extends DefaultResponse> acceptInviteTeam(@RequestBody @Valid
+    public ResponseEntity<? extends DefaultResponse> inviteAcceptTeam(@RequestBody @Valid
         AcceptInviteTeamReqDto acceptInviteTeamReqDto, HttpServletRequest request)
         throws ParseException {
         String userId = (String) request.getAttribute("id");
         log.info("TeamController inviteAccept url : {}", acceptInviteTeamReqDto.getUrl());
         String userTeamId = teamService.acceptInviteTeam(userId, acceptInviteTeamReqDto.getUrl());
         log.info("TeamController userTeamId : {}", userTeamId);
-        userService.addUserTeam(userId, userTeamId);
+        if(userTeamId != null){
+            userService.addUserTeam(userId, userTeamId);
+        }
 
+        // 예외 처리로 해결한다.
+        // 초대 validation에 대한 예외 처리 해야한다.
         if(userTeamId == null){
             return ResponseEntity
                 .status(HttpStatus.GONE)
-                .body(new ResponseFail(false, HttpStatus.NOT_ACCEPTABLE.value(), "시간 초과!"));
+                .body(new ResponseFail(false, HttpStatus.NOT_ACCEPTABLE.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
         }else{
             return ResponseEntity
                 .status(HttpStatus.OK)
