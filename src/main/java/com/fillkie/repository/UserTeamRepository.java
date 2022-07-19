@@ -9,5 +9,5 @@ public interface UserTeamRepository extends MongoRepository<UserTeam, String> {
 
     public Optional<UserTeam> findById(String email);
     public List<UserTeam> findByUserId(String userId);
-    public Optional<UserTeam> findByUserIdAndTeamId(String userId, String teamId);
+    public UserTeam findByUserIdAndTeamId(String userId, String teamId);
 }
