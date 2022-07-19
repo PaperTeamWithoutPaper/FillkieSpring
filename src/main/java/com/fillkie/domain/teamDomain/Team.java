@@ -14,6 +14,7 @@ public class Team {
   @Id
   private String id;
   private String name;
+//  private String image;
   private List<String> userTeamIds;
   private List<String> projects;
 

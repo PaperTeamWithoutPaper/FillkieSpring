@@ -1,7 +1,7 @@
 package com.fillkie.service;
 
 import com.fillkie.controller.requestDto.CreateTeamReqDto;
-import com.fillkie.controller.responseDto.ValidateUrlResDto;
+import com.fillkie.controller.responseDto.InviteTeamDetail;
 import com.fillkie.domain.Group;
 import com.fillkie.domain.GroupUser;
 import com.fillkie.domain.UserTeam;
@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -137,11 +136,20 @@ public class TeamService {
     }
 
     /**
+     * 팀 초대 수락 페이지에 대한 팀 정보
+     */
+    public InviteTeamDetail getTeamName(String userId, String url){
+        TeamInvite teamInvite = teamInviteRepository.findByUrl(url).orElseThrow(RuntimeException::new);
+        Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
+
+        return new InviteTeamDetail(team.getName());
+    }
+
+    /**
      * Url Validation
      */
     // 예외처리로 팀이 앖거나 url이 만료되었다고 한다.
-    public ValidateUrlResDto validateUrl(String userId, String url){
-        TeamInvite teamInvite = teamInviteRepository.findByUrl(url).orElseThrow(RuntimeException::new);
+    public boolean validateUrl(String userId, String url, TeamInvite teamInvite){
         Long expiryDate = teamInvite.getExpiryDate();
         Long accessDate = getCurrentTimeMillis();
 
@@ -149,7 +157,7 @@ public class TeamService {
         // 초대 만료 시간 초과 경우
         if(expiryDate - accessDate < 0){
             log.info("TeamSevice AcceptInvite Expired url : {}", url);
-            return new ValidateUrlResDto(null);
+            return false;
         }
 
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
@@ -157,11 +165,11 @@ public class TeamService {
         // 예외 처리 필요
         // 이미 팀에 가입된 사람인 경우
         if(isJoinedUserTeam(userId, team.getId())){
-           return new ValidateUrlResDto(null);
+            log.info("이미 팀에 가입된 사람입니다. teamId : {}, urlId : {}", team.getId(), teamInvite.getId());
+           return false;
         }
-        System.out.println("validateUrl teamId : " + team.getId() + "teamName : " + team.getName());
-        return new ValidateUrlResDto(team.getName());
 
+        return true;
     }
 
     private boolean isJoinedUserTeam(String userId, String teamId){
@@ -178,6 +186,10 @@ public class TeamService {
     public String acceptInviteTeam(String userId, String url) throws ParseException {
         // TeamInvite 조회
         TeamInvite teamInvite = teamInviteRepository.findByUrl(url).orElseThrow(RuntimeException::new);
+
+        if(!validateUrl(userId, url, teamInvite)){
+            return null;
+        }
 
         // Team 조회
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
