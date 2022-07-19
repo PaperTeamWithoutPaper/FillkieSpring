@@ -171,12 +171,8 @@ public class TeamService {
     }
 
     private boolean isJoinedUserTeam(String userId, String teamId){
-        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(userId, teamId);
-        if(userTeam == null){
-            return false;
-        }else{
-            return true;
-        }
+        Optional<UserTeam> userTeams = userTeamRepository.findByUserIdAndTeamId(userId, teamId);
+        return userTeams.isPresent();
     }
 
     /**
