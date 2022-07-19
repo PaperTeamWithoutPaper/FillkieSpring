@@ -138,10 +138,7 @@ public class TeamService {
     /**
      * 팀 초대 수락 페이지에 대한 팀 정보
      */
-    public InviteTeamDetail getTeamName(String userId, String url){
-        TeamInvite teamInvite = teamInviteRepository.findByUrl(url).orElseThrow(RuntimeException::new);
-        Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
-
+    public InviteTeamDetail getInviteTeamDetail(String userId, String url, TeamInvite teamInvite, Team team){
         return new InviteTeamDetail(team.getName());
     }
 
@@ -149,7 +146,8 @@ public class TeamService {
      * Url Validation
      */
     // 예외처리로 팀이 앖거나 url이 만료되었다고 한다.
-    public boolean validateUrl(String userId, String url, TeamInvite teamInvite){
+    public InviteTeamDetail validateUrl(String userId, String url){
+        TeamInvite teamInvite = teamInviteRepository.findByUrl(url).orElseThrow(RuntimeException::new);
         Long expiryDate = teamInvite.getExpiryDate();
         Long accessDate = getCurrentTimeMillis();
 
@@ -157,7 +155,7 @@ public class TeamService {
         // 초대 만료 시간 초과 경우
         if(expiryDate - accessDate < 0){
             log.info("TeamSevice AcceptInvite Expired url : {}", url);
-            return false;
+            return null;
         }
 
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
@@ -166,10 +164,10 @@ public class TeamService {
         // 이미 팀에 가입된 사람인 경우
         if(isJoinedUserTeam(userId, team.getId())){
             log.info("이미 팀에 가입된 사람입니다. teamId : {}, urlId : {}", team.getId(), teamInvite.getId());
-           return false;
+           return null;
         }
 
-        return true;
+        return getInviteTeamDetail(userId, url, teamInvite, team);
     }
 
     private boolean isJoinedUserTeam(String userId, String teamId){
@@ -187,9 +185,10 @@ public class TeamService {
         // TeamInvite 조회
         TeamInvite teamInvite = teamInviteRepository.findByUrl(url).orElseThrow(RuntimeException::new);
 
-        if(!validateUrl(userId, url, teamInvite)){
-            return null;
-        }
+        // 수락을 누를 시 이미 validation이 된 것으로 판단
+//        if(!validateUrl(userId, url, teamInvite)){
+//            return null;
+//        }
 
         // Team 조회
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);

@@ -67,25 +67,24 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseSuccess<InviteTeamResDto>(true, HttpStatus.OK.value(), "URL 받아랑!", new InviteTeamResDto(url)));
     }
 
-    @GetMapping("invite/detail")
-    public ResponseEntity<? extends DefaultResponse> inviteTeamDetail(@RequestParam("url") @Valid String url, HttpServletRequest request){
+    @GetMapping("invite/validation")
+    public ResponseEntity<? extends DefaultResponse> inviteValidation(@RequestParam("url") @Valid String url, HttpServletRequest request){
         String userId = (String) request.getAttribute("id");
 
-        InviteTeamDetail inviteTeamDetail = teamService.getTeamName(userId, url);
+        InviteTeamDetail inviteTeamDetail = teamService.validateUrl(userId, url);
         log.info("TeamController validateUrl url : {}", url);
         log.info("TeamController validateUrl teamName : {}", inviteTeamDetail.getTeamName());
 
         // 예외 처리로 해결한다.
-        // 아직은 초대 url을 삭제하지 않기 때문에 항상 team 객체가 존재하여 예외처리 필요없다.
-//        if(inviteTeamDetail.getTeamName() == null){
-//            return ResponseEntity
-//                .status(HttpStatus.REQUEST_TIMEOUT)
-//                .body(new ResponseFail(false, HttpStatus.REQUEST_TIMEOUT.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
-//        }else{
+        if(inviteTeamDetail == null){
+            return ResponseEntity
+                .status(HttpStatus.REQUEST_TIMEOUT)
+                .body(new ResponseFail(false, HttpStatus.REQUEST_TIMEOUT.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
+        }else{
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseSuccess<InviteTeamDetail>(false, HttpStatus.OK.value(), "수락해주세요!", inviteTeamDetail));
-//        }
+        }
 
     }
 
@@ -102,16 +101,16 @@ public class TeamController {
         }
 
         // 예외 처리로 해결한다.
-        // 초대 validation에 대한 예외 처리 해야한다.
-        if(userTeamId == null){
-            return ResponseEntity
-                .status(HttpStatus.GONE)
-                .body(new ResponseFail(false, HttpStatus.NOT_ACCEPTABLE.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
-        }else{
+        // 이 전에 inviteValidation에서 validation 과정을 마쳤다. 즉, DB에 저장하면 된다.
+//        if(userTeamId == null){
+//            return ResponseEntity
+//                .status(HttpStatus.GONE)
+//                .body(new ResponseFail(false, HttpStatus.NOT_ACCEPTABLE.value(), "초대 시간 만료되었거나 팀이 삭제 되었거나 이미 팀에 소속되어 있습니다!"));
+//        }else{
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 합류 성공!", userTeamId));
-        }
+//        }
     }
 
     @GetMapping("list")
