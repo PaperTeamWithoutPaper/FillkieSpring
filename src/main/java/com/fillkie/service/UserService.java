@@ -104,7 +104,7 @@ public class UserService {
   }
 
   private void signUp(GoogleUser googleUser, OAuthToken oAuthToken) {
-    User user = googleUser.toUser(oAuthToken.getExpiryDate(), oAuthToken.getAccessToken(), oAuthToken.getRefreshToken());
+    User user = googleUser.toUser(Long.parseLong(oAuthToken.getExpiryDate()), oAuthToken.getAccessToken(), oAuthToken.getRefreshToken());
     userRepository.insert(user);
   }
 
