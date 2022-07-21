@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,20 +42,20 @@ public class TeamService {
     /**
      * team 저장 : userTeamId 반환
      */
+    // default image 필요하다.
     @Transactional
     public String saveTeam(CreateTeamReqDto createTeamDto, String userId){
         String teamName = createTeamDto.getTeamName();
 
         Team team = Team.builder()
             .name(teamName)
-            .userTeamIds(new ArrayList<>())
-            .projects(new ArrayList<>())
+            .image(null)
             .build();
         team = teamRepository.insert(team);
 
         UserTeam userTeam = saveUserTeam(userId, team.getId(), teamName);
 
-        team.addUserTeamId(userTeam.getId());
+//        team.addUserTeamId(userTeam.getId());
         team = teamRepository.save(team);
 
 
@@ -76,12 +77,8 @@ public class TeamService {
         Group group = Group.builder()
             .name(groupName)
             .teamId(teamId)
-            .users(new ArrayList<>())
-            .roles(new ArrayList<>())
             .build();
-        if (flag){
-            group.addUser(userId);
-        }
+
         return groupRepository.insert(group);
     }
 
@@ -195,7 +192,6 @@ public class TeamService {
 
         // Group "intern"에 user 추가
         Group group = groupRepository.findByNameAndTeamId("intern", team.getId()).orElseThrow(RuntimeException::new);
-        group.addUser(userId);
         groupRepository.save(group);
         log.info("TeamSevice group intern 추가 성공 : {}", true);
 
@@ -217,7 +213,7 @@ public class TeamService {
         userTeamRepository.insert(userTeam);
 
         // Team userTeamId 추가
-        team.addUserTeamId(userTeam.getId());
+//        team.addUserTeamId(userTeam.getId());
         teamRepository.save(team);
 
         return userTeam.getId();
@@ -247,19 +243,18 @@ public class TeamService {
      * team의 이름, 인원수 반환
      */
     public TeamDetailDto getTeamDetail(String teamId){
-        Team team = getTeam(teamId);
-        return new TeamDetailDto(team.getName(), team.getUserTeamIds().size());
+        return new TeamDetailDto(getTeamName(teamId), getTeamHeadcount(teamId));
     }
-//
-//    public int getTeamHeadcount(String teamId){
-//        Team team = getTeam(teamId);
-//        return team.getUsers().size();
-//    }
-//
-//    public String getTeamName(String teamId){
-//        Team team = getTeam(teamId);
-//        return team.getName();
-//    }
+
+    private Long getTeamHeadcount(String teamId){
+        int size = userTeamRepository.findByTeamId(teamId).size();
+        return Long.parseLong(String.valueOf(size));
+    }
+
+    private String getTeamName(String teamId){
+        Team team = getTeam(teamId);
+        return team.getName();
+    }
 
     /**
      * 현재 시간 String 반환

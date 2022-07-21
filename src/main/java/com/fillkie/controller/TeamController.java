@@ -42,8 +42,6 @@ public class TeamController {
         log.info("createTeam userId : {}", userId);
         String userTeamId = teamService.saveTeam(createTeamDto, userId);
         log.info("createTeam userTeamId : {}", userTeamId);
-        userService.addUserTeam(userId, userTeamId);
-
 
         if(userTeamId == null){
             return ResponseEntity
@@ -98,9 +96,6 @@ public class TeamController {
         log.info("TeamController inviteAccept url : {}", acceptInviteTeamReqDto.getUrl());
         String userTeamId = teamService.acceptInviteTeam(userId, acceptInviteTeamReqDto.getUrl());
         log.info("TeamController userTeamId : {}", userTeamId);
-        if(userTeamId != null){
-            userService.addUserTeam(userId, userTeamId);
-        }
 
         // 예외 처리로 해결한다.
         // 이 전에 inviteValidation에서 validation 과정을 마쳤다. 즉, DB에 저장하면 된다.
