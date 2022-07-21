@@ -31,6 +31,13 @@ public class User {
         .build();
   }
 
+  public User(String id, String email, String name, String image, Google google) {
+    this.id = id;
+    this.email = email;
+    this.name = name;
+    this.image = image;
+    this.google = google;
+  }
 //  public void addUserTeamId(String userTeamId){
 //    userTeamIds.add(userTeamId);
 //  }
