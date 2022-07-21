@@ -45,6 +45,7 @@ public class UserService {
   @Transactional
   public AccessRefreshDto oauthLogin(String code) {
     ResponseEntity<String> accessTokenResponse = oauthService.createPostRequest(code);
+    System.out.println("UserService body : " + accessTokenResponse.getBody());
     OAuthToken oAuthToken = oauthService.getAccessToken(accessTokenResponse);
     logger.info("infos : {}", oAuthToken.toString());
     logger.info("Access Token: {}", oAuthToken.getAccessToken());
