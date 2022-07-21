@@ -47,6 +47,7 @@ public class UserService {
     ResponseEntity<String> accessTokenResponse = oauthService.createPostRequest(code);
     System.out.println("UserService body : " + accessTokenResponse.getBody());
     OAuthToken oAuthToken = oauthService.getAccessToken(accessTokenResponse);
+    System.out.println("UserService oAuthToken toString : " + oAuthToken.toString());
     logger.info("infos : {}", oAuthToken.toString());
     logger.info("Access Token: {}", oAuthToken.getAccessToken());
 
