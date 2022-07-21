@@ -48,7 +48,7 @@ public class UserService {
     System.out.println("UserService body : " + accessTokenResponse.getBody());
     OAuthToken oAuthToken = oauthService.getAccessToken(accessTokenResponse);
     System.out.println("oAuthToken AccessToken " + oAuthToken.getAccessToken());
-    System.out.println("oAuthToken expiryDate " + oAuthToken.getExpiryDate());
+    System.out.println("oAuthToken expiryDate " + oAuthToken.getExpiresIn());
     System.out.println("UserService oAuthToken toString : " + oAuthToken.toString());
     logger.info("infos : {}", oAuthToken.toString());
     logger.info("Access Token: {}", oAuthToken.getAccessToken());
@@ -104,7 +104,7 @@ public class UserService {
   }
 
   private void signUp(GoogleUser googleUser, OAuthToken oAuthToken) {
-    User user = googleUser.toUser(Long.parseLong(oAuthToken.getExpiryDate()), oAuthToken.getAccessToken(), oAuthToken.getRefreshToken());
+    User user = googleUser.toUser(Long.parseLong(oAuthToken.getExpiresIn()), oAuthToken.getAccessToken(), oAuthToken.getRefreshToken());
     userRepository.insert(user);
   }
 

@@ -6,7 +6,7 @@ import lombok.Getter;
 public class OAuthToken {
 
   private String accessToken;
-  private String expiryDate;
+  private String expiresIn;
   private String idToken;
   private String refreshToken;
   private String scope;
@@ -18,7 +18,7 @@ public class OAuthToken {
   public OAuthToken(String accessToken, String expiresIn, String idToken, String refreshToken,
       String scope, String tokenType) {
     this.accessToken = accessToken;
-    this.expiryDate = expiresIn;
+    this.expiresIn = expiresIn;
     this.idToken = idToken;
     this.refreshToken = refreshToken;
     this.scope = scope;
@@ -27,6 +27,6 @@ public class OAuthToken {
 
   @Override
   public String toString() {
-    return "accessToken : " + accessToken + "\nexpiresIn : " + expiryDate + "\nidToken : " + idToken + "\nrefreshToken : " + refreshToken + "\nscope : " + scope + "\ntokenType" +tokenType;
+    return "accessToken : " + accessToken + "\nexpiresIn : " + expiresIn + "\nidToken : " + idToken + "\nrefreshToken : " + refreshToken + "\nscope : " + scope + "\ntokenType" +tokenType;
   }
 }
