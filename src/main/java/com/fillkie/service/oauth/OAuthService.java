@@ -80,6 +80,7 @@ public class OAuthService {
       oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
       log.info("Access Token Body : {}", response.getBody());
     } catch (JsonProcessingException e) {
+      System.out.println("getAccessToken Error 발생");
       e.printStackTrace();
     }
     return oAuthToken;
