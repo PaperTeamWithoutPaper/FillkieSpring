@@ -19,6 +19,10 @@ public class Google {
         this.refreshToken = refreshToken;
     }
 
+    public void setExpiryDate(Long expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }

@@ -33,6 +33,9 @@ public class User {
 //    userTeamIds.add(userTeamId);
 //  }
 
+  public void setExpiryDate(Long expiryDate){
+    this.google.setExpiryDate(expiryDate);
+  }
   public void setAccessToken(String accessToken) {
     this.google.setAccessToken(accessToken);
   }
