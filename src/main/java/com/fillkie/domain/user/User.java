@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "user")
 @Getter
@@ -15,6 +16,7 @@ public class User {
   private String email;
   private String name;
   private String image;
+  @Field("google")
   private Google google;
 
   @Builder

@@ -4,12 +4,17 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 public class Google {
+    @Field("expiryDate")
     private Long expiryDate;
+    @Field("rootDir")
     private String rootDir;
+    @Field("accessToken")
     private String accessToken;
+    @Field("refreshToken")
     private String refreshToken;
 
     @Builder
