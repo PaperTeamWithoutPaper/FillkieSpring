@@ -76,6 +76,7 @@ public class OAuthService {
   public OAuthToken getAccessToken(ResponseEntity<String> response) {
     OAuthToken oAuthToken = null;
     try {
+      log.info("Activate OAuthToken objectMapper");
       oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
       log.info("Access Token Body : {}", response.getBody());
     } catch (JsonProcessingException e) {
