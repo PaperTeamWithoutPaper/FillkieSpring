@@ -14,27 +14,16 @@ public class Group {
     @Id
     private String id;
     private String name;
+//    private String ownerId;
     private String teamId;
-    private List<String> users;
-    private List<String> roles;
 
 
     @Builder
-    public Group(String name, String teamId, List<String> users, List<String> roles) {
+    public Group(String name, String teamId) {
         this.name = name;
+//        this.ownerId = ownerId;
         this.teamId = teamId;
-        this.users = users;
-        this.roles = roles;
     }
 
-    public String addUser(String userId){
-        users.add(userId);
-        return userId;
-    }
-
-    public String addRole(String role){
-        roles.add(role);
-        return role;
-    }
 
 }

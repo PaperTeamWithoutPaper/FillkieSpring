@@ -1,10 +1,8 @@
 package com.fillkie.oauthService.google;
 
-import com.fillkie.domain.User;
+import com.fillkie.domain.user.User;
 import java.util.ArrayList;
 import lombok.Data;
-
-import java.util.HashSet;
 
 @Data
 public class GoogleUser {
@@ -36,15 +34,14 @@ public class GoogleUser {
     this.hd = hd;
   }
 
-  public User toUser(String accessToken, String refreshToken) {
+  public User toUser(Long expiryDate, String accessToken, String refreshToken) {
     return User.builder()
         .email(email)
         .name(name)
         .image(picture)
-        .expired(false)
+        .expiryDate(expiryDate)
         .accessToken(accessToken)
         .refreshToken(refreshToken)
-        .userTeamIds(new ArrayList<>())
         .build();
   }
 

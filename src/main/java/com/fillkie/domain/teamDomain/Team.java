@@ -14,24 +14,21 @@ public class Team {
   @Id
   private String id;
   private String name;
-//  private String image;
-  private List<String> userTeamIds;
-  private List<String> projects;
+  private String image;
 
   @Builder
-  public Team(String name, List<String> userTeamIds, List<String> projects) {
+  public Team(String name, String image) {
     this.name = name;
-    this.userTeamIds = userTeamIds;
-    this.projects = projects;
+    this.image = image;
   }
 
-  public void addUserTeamId(String userTeamId){
-    userTeamIds.add(userTeamId);
-  }
+//  public void addUserTeamId(String userTeamId){
+//    userTeamIds.add(userTeamId);
+//  }
 
-  public void addProjects(String projectId){
-    projects.add(projectId);
-  }
+//  public void addProjects(String projectId){
+//    projects.add(projectId);
+//  }
 
 
 }

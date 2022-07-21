@@ -10,5 +10,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class TeamDetailDto {
     private String teamName;
-    private int headcount;
+    private Long headcount;
 }

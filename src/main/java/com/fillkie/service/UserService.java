@@ -3,7 +3,7 @@ package com.fillkie.service;
 import com.fillkie.security.advice.exception.UserNotFoundException;
 import com.fillkie.security.config.jwt.JwtTokenProvider;
 import com.fillkie.controller.responseDto.TeamListResDto;
-import com.fillkie.domain.User;
+import com.fillkie.domain.user.User;
 import com.fillkie.domain.UserTeam;
 import com.fillkie.oauthService.google.GoogleUser;
 import com.fillkie.oauthService.google.OAuthToken;
@@ -65,11 +65,11 @@ public class UserService {
     return new AccessRefreshDto(jwtTokenProvider.createAccessToken(user.getId(), user.getEmail()), jwtTokenProvider.createRefreshToken(user.getId(), user.getEmail()));
   }
 
-  public String addUserTeam(String userId, String userTeamId){
-    User user = getUser(userId);
-    user.addUserTeamId(userTeamId);
-    return userRepository.save(user).getId();
-  }
+//  public String addUserTeam(String userId, String userTeamId){
+//    User user = getUser(userId);
+//    user.addUserTeamId(userTeamId);
+//    return userRepository.save(user).getId();
+//  }
 
   // 예외 처리 필요
   private User getUser(String userId){
@@ -100,7 +100,7 @@ public class UserService {
   }
 
   private void signUp(GoogleUser googleUser, OAuthToken oAuthToken) {
-    User user = googleUser.toUser(oAuthToken.getAccessToken(), oAuthToken.getRefreshToken());
+    User user = googleUser.toUser(oAuthToken.getExpiryDate(), oAuthToken.getAccessToken(), oAuthToken.getRefreshToken());
     userRepository.insert(user);
   }
 

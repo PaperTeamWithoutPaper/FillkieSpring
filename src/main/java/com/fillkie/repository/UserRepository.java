@@ -1,6 +1,6 @@
 package com.fillkie.repository;
 
-import com.fillkie.domain.User;
+import com.fillkie.domain.user.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
