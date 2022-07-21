@@ -11,20 +11,18 @@ public class OAuthToken {
   private String refreshToken;
   private String scope;
   private String tokenType;
-  private String roodDir;
 
   public OAuthToken() {
   }
 
   public OAuthToken(String accessToken, Long expiresIn, String idToken, String refreshToken,
-      String scope, String tokenType, String roodDir) {
+      String scope, String tokenType) {
     this.accessToken = accessToken;
     this.expiryDate = expiresIn;
     this.idToken = idToken;
     this.refreshToken = refreshToken;
     this.scope = scope;
     this.tokenType = tokenType;
-    this.roodDir = roodDir;
   }
 
   @Override
