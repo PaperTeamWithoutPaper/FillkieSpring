@@ -1,14 +1,18 @@
 package com.fillkie.domain.user;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "user")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
   @Id
@@ -31,13 +35,13 @@ public class User {
         .build();
   }
 
-  public User(String id, String email, String name, String image, Google google) {
-    this.id = id;
-    this.email = email;
-    this.name = name;
-    this.image = image;
-    this.google = google;
-  }
+//  public User(String id, String email, String name, String image, Google google) {
+//    this.id = id;
+//    this.email = email;
+//    this.name = name;
+//    this.image = image;
+//    this.google = google;
+//  }
 //  public void addUserTeamId(String userTeamId){
 //    userTeamIds.add(userTeamId);
 //  }
