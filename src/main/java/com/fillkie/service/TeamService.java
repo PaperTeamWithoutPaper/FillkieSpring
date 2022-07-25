@@ -2,12 +2,17 @@ package com.fillkie.service;
 
 import com.fillkie.controller.requestDto.CreateTeamReqDto;
 import com.fillkie.controller.responseDto.InviteTeamDetail;
+import com.fillkie.controller.responseDto.PermissionGroupUsersDto;
+import com.fillkie.controller.responseDto.PermissionGroupsResDto;
+import com.fillkie.controller.responseDto.PermissionsResDto;
 import com.fillkie.domain.group.Group;
 import com.fillkie.domain.group.GroupPermission;
 import com.fillkie.domain.group.GroupUser;
 import com.fillkie.domain.UserTeam;
 import com.fillkie.domain.team.Team;
 import com.fillkie.domain.team.TeamInvite;
+import com.fillkie.domain.user.User;
+import com.fillkie.repository.GroupPermissionRepository;
 import com.fillkie.repository.GroupRepository;
 import com.fillkie.repository.GroupUserRepository;
 import com.fillkie.repository.UserRepository;
@@ -17,8 +22,11 @@ import com.fillkie.repository.team.TeamRepository;
 import com.fillkie.service.dto.TeamDetailDto;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +45,7 @@ public class TeamService {
     private final TeamInviteRepository teamInviteRepository;
     private final UserTeamRepository userTeamRepository;
     private final UserRepository userRepository;
+    private final GroupPermissionRepository groupPermissionRepository;
 
     /**
      * team 저장 : userTeamId 반환
@@ -59,22 +68,57 @@ public class TeamService {
         team = teamRepository.save(team);
 
         Group professor = saveGroup("professor", team.getId());
+        List<Integer> permissionList;
         Group doctor = saveGroup("doctor", team.getId());
+        permissionList = new ArrayList<>();
+        for(int i = 4 ; i < 5 ; i++){
+            permissionList.add(i);
+        }
+        GroupPermission doctorGroupPermission = saveGroupPermission(team.getId(), doctor.getId());
+        declineGroupPermission(doctorGroupPermission, permissionList);
         Group master = saveGroup("master", team.getId());
+        permissionList = new ArrayList<>();
+        for(int i = 3 ; i < 5 ; i++){
+            permissionList.add(i);
+        }
+        GroupPermission masterGroupPermission = saveGroupPermission(team.getId(), master.getId());
+        declineGroupPermission(masterGroupPermission, permissionList);
         Group intern = saveGroup("intern", team.getId());
+        permissionList = new ArrayList<>();
+        for(int i = 2 ; i < 5 ; i++){
+            permissionList.add(i);
+        }
+        GroupPermission internGroupPermission = saveGroupPermission(team.getId(), intern.getId());
+        declineGroupPermission(internGroupPermission, permissionList);
 
         GroupUser groupUser = saveGroupUser(team.getId(), professor.getId(), userId);
 
         return userTeam.getId();
     }
-    private void createGroupPermission(String teamId, String groupId){
-
-
-
-
-
+    private GroupPermission declineGroupPermission(GroupPermission groupPermission, List<Integer> declinePermissionList){
+        groupPermission.declinePermission(declinePermissionList);
+        return groupPermissionRepository.save(groupPermission);
     }
-//    private GroupPermission saveGroupPermission(String groupId, )
+    private GroupPermission acceptGroupPermission(GroupPermission groupPermission, List<Integer> acceptPermissionList){
+        groupPermission.acceptPermission(acceptPermissionList);
+        return groupPermissionRepository.save(groupPermission);
+    }
+
+    private GroupPermission saveGroupPermission(String teamId, String groupId){
+        // json을 생성한 후 매핑하여 빈으로 만들어야 한다.
+        List<Integer> permissionList = new ArrayList<>();
+        for(int i = 0 ; i <  5 ; i++){
+            permissionList.add(i);
+        }
+        GroupPermission groupPermission = GroupPermission.builder()
+            .teamId(teamId)
+            .groupId(groupId)
+            .permission(new HashMap<>())
+            .build();
+        groupPermission.acceptPermission(permissionList);
+        groupPermissionRepository.insert(groupPermission);
+        return groupPermission;
+    }
 
     private Group saveGroup(String groupName, String teamId){
         Group group = Group.builder()
@@ -275,6 +319,42 @@ public class TeamService {
     private Date parseDateTime(String date) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
         return dateFormat.parse(date);
+    }
+
+
+    /**
+     * readGroupsTeam Groups 반환
+     */
+    public List<PermissionGroupsResDto> getPermissionGroups(String teamId){
+        List<Group> groups = groupRepository.findByTeamId(teamId);
+        List<PermissionGroupsResDto> list = new ArrayList<>();
+        for(int i = 0 ; i < groups.size() ; i++){
+            list.add(new PermissionGroupsResDto(groups.get(i).getId(), groups.get(i).getName()));
+        }
+        return list;
+    }
+
+    /**
+     * Group의 permission 반환
+     */
+    public PermissionsResDto getPermissions(String groupId){
+        GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupId)
+            .orElseThrow(RuntimeException::new);
+        return new PermissionsResDto(groupPermission.getPermission());
+    }
+
+    /**
+     * Group에 속한 Users 반환
+     */
+    public List<PermissionGroupUsersDto> getPermissionGroupUsers(String teamId, String groupId){
+        List<GroupUser> groupUsers = groupUserRepository.findByTeamIdAndGroupId(teamId,
+            groupId);
+        List<PermissionGroupUsersDto> userList = new ArrayList<>();
+        for(int i = 0 ; i < groupUsers.size() ; i++){
+            User user = userRepository.findById(groupUsers.get(i).getUserId()).orElseThrow(RuntimeException::new);
+            userList.add(new PermissionGroupUsersDto(user.getId(), user.getName()));
+        }
+        return userList;
     }
 
 }
