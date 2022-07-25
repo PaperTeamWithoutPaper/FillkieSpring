@@ -1,11 +1,9 @@
-package com.fillkie.domain.teamDomain;
+package com.fillkie.domain.team;
 
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 @Document(collection = "team")
 @Getter
@@ -15,11 +13,13 @@ public class Team {
   private String id;
   private String name;
   private String image;
+  private String ownerId;
 
   @Builder
-  public Team(String name, String image) {
+  public Team(String name, String image, String ownerId) {
     this.name = name;
     this.image = image;
+    this.ownerId = ownerId;
   }
 
 //  public void addUserTeamId(String userTeamId){

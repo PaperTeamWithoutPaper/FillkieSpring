@@ -2,11 +2,12 @@ package com.fillkie.service;
 
 import com.fillkie.controller.requestDto.CreateTeamReqDto;
 import com.fillkie.controller.responseDto.InviteTeamDetail;
-import com.fillkie.domain.Group;
-import com.fillkie.domain.GroupUser;
+import com.fillkie.domain.group.Group;
+import com.fillkie.domain.group.GroupPermission;
+import com.fillkie.domain.group.GroupUser;
 import com.fillkie.domain.UserTeam;
-import com.fillkie.domain.teamDomain.Team;
-import com.fillkie.domain.teamDomain.TeamInvite;
+import com.fillkie.domain.team.Team;
+import com.fillkie.domain.team.TeamInvite;
 import com.fillkie.repository.GroupRepository;
 import com.fillkie.repository.GroupUserRepository;
 import com.fillkie.repository.UserRepository;
@@ -16,10 +17,8 @@ import com.fillkie.repository.team.TeamRepository;
 import com.fillkie.service.dto.TeamDetailDto;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +49,7 @@ public class TeamService {
         Team team = Team.builder()
             .name(teamName)
             .image(null)
+            .ownerId(userId)
             .build();
         team = teamRepository.insert(team);
 
@@ -58,22 +58,25 @@ public class TeamService {
 //        team.addUserTeamId(userTeam.getId());
         team = teamRepository.save(team);
 
-
-
-        Group professor = saveGroup("professor", team.getId(), userId, true);
-        Group doctor = saveGroup("doctor", team.getId(), userId, false);
-        Group master = saveGroup("master", team.getId(), userId, false);
-        Group intern = saveGroup("intern", team.getId(), userId, false);
+        Group professor = saveGroup("professor", team.getId());
+        Group doctor = saveGroup("doctor", team.getId());
+        Group master = saveGroup("master", team.getId());
+        Group intern = saveGroup("intern", team.getId());
 
         GroupUser groupUser = saveGroupUser(team.getId(), professor.getId(), userId);
 
-
-
         return userTeam.getId();
+    }
+    private void createGroupPermission(String teamId, String groupId){
+
+
+
+
 
     }
+//    private GroupPermission saveGroupPermission(String groupId, )
 
-    private Group saveGroup(String groupName, String teamId, String userId, boolean flag){
+    private Group saveGroup(String groupName, String teamId){
         Group group = Group.builder()
             .name(groupName)
             .teamId(teamId)

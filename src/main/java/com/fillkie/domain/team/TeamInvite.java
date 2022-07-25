@@ -1,4 +1,4 @@
-package com.fillkie.domain.teamDomain;
+package com.fillkie.domain.team;
 
 import lombok.Builder;
 import lombok.Getter;

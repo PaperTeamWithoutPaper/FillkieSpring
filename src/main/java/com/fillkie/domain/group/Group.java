@@ -1,4 +1,4 @@
-package com.fillkie.domain;
+package com.fillkie.domain.group;
 
 import java.util.ArrayList;
 import java.util.List;

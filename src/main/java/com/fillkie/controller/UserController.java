@@ -5,6 +5,7 @@ import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.response.TokenResponse;
 import com.fillkie.controller.responseDto.RefreshTokenResDto;
+import com.fillkie.security.advice.exception.TokenEmptyException;
 import com.fillkie.service.UserService;
 import com.fillkie.service.dto.AccessRefreshDto;
 import com.fillkie.service.dto.UserProfileDto;
@@ -28,6 +29,9 @@ import java.io.IOException;
 public class UserController {
 
   private final UserService userService;
+  @Value("${oauth.google.redirect-fillkie}")
+  private String redirect_fillkie;
+
 
   /**
    * OAuth Redirect url, Login 검증 및 인증
@@ -43,7 +47,7 @@ public class UserController {
     HttpHeaders headers = new HttpHeaders();
     String accessToken = "bearer " + accessRefreshDto.getAccessToken();
     String refreshToken = "bearer " + accessRefreshDto.getRefreshToken();
-    String redirect_url = "https://fillkie.com/loginapi?access=" + accessToken + "&refresh=" + refreshToken;
+    String redirect_url = redirect_fillkie + "/loginapi?access=" + accessToken + "&refresh=" + refreshToken;
     response.sendRedirect(redirect_url);
   }
 
@@ -78,7 +82,6 @@ public class UserController {
 //    log.info("expiredLength : {}", expiredLength);
 //    log.info("POST_URL : {}", POST_URL);
 //    log.info("GET_URL : {}", GET_URL);
-
-    response.setHeader("sexy", "sexy");
+      throw new TokenEmptyException("없어");
   }
 }

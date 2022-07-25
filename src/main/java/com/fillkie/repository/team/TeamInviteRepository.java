@@ -1,7 +1,6 @@
 package com.fillkie.repository.team;
 
-import com.fillkie.domain.teamDomain.Team;
-import com.fillkie.domain.teamDomain.TeamInvite;
+import com.fillkie.domain.team.TeamInvite;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

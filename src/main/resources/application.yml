@@ -21,10 +21,11 @@ oauth:
     grant-type: grant-type
     post-url: post-url
     get-url: get-url
+    redirect-fillkie: fillkie-uri
 
 logging:
   level:
     root: info
 
 server:
-  port: 80
+  port: 8080

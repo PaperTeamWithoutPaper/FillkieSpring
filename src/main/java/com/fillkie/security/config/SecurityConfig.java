@@ -26,7 +26,7 @@ public class SecurityConfig {
     http.csrf().disable();
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+//        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
         // @CrossOrigin은 인증이 없을 때 실행되고 시큐리티 필터에 필터를 등록해야 인증이 있을 때 실행된다.
         // 이걸로 이제 요청 시 시큐리티의 로그인 창이 뜨지 않는다.
         .addFilter(corsConfig.corsFilter())

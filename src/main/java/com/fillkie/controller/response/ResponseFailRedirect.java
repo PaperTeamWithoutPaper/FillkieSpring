@@ -1,11 +1,12 @@
 package com.fillkie.controller.response;
 
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class ResponseFailRedirect extends DefaultResponse{
 
-    private String uri;
+    public String uri;
 
     public ResponseFailRedirect(boolean success, int code, String msg, String uri) {
         this.success = success;

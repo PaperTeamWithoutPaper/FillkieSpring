@@ -20,7 +20,7 @@ public class AppConfig implements WebMvcConfigurer {
 
   private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);
 
-//  private final BearerAuthInterceptor bearerAuthInterceptor;
+  private final BearerAuthInterceptor bearerAuthInterceptor;
 
   private final RefreshAuthInterceptor refreshAuthInterceptor;
 
@@ -34,5 +34,9 @@ public class AppConfig implements WebMvcConfigurer {
 //        .excludePathPatterns("/user/oauth/**");
 //                .addPathPatterns("/api/booking/{bookingId}")
 //                .addPathPatterns("/api/rooms/{userId}/wish/{roomId}");
+    registry.addInterceptor(bearerAuthInterceptor)
+        .order(1)
+        .addPathPatterns("/**")
+        .excludePathPatterns("/user/oauth/**");
   }
 }
