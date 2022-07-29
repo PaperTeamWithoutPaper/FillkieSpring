@@ -37,6 +37,6 @@ public class AppConfig implements WebMvcConfigurer {
     registry.addInterceptor(bearerAuthInterceptor)
         .order(1)
         .addPathPatterns("/**")
-        .excludePathPatterns("/user/oauth/**");
+        .excludePathPatterns("/user/oauth/**", "/user/test");
   }
 }

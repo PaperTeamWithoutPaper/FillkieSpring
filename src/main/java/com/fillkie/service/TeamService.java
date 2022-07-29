@@ -71,21 +71,21 @@ public class TeamService {
         List<Integer> permissionList;
         Group doctor = saveGroup("doctor", team.getId());
         permissionList = new ArrayList<>();
-        for(int i = 4 ; i < 5 ; i++){
+        for(int i = 7 ; i < 10 ; i++){
             permissionList.add(i);
         }
         GroupPermission doctorGroupPermission = saveGroupPermission(team.getId(), doctor.getId());
         declineGroupPermission(doctorGroupPermission, permissionList);
         Group master = saveGroup("master", team.getId());
         permissionList = new ArrayList<>();
-        for(int i = 3 ; i < 5 ; i++){
+        for(int i = 5 ; i < 10 ; i++){
             permissionList.add(i);
         }
         GroupPermission masterGroupPermission = saveGroupPermission(team.getId(), master.getId());
         declineGroupPermission(masterGroupPermission, permissionList);
         Group intern = saveGroup("intern", team.getId());
         permissionList = new ArrayList<>();
-        for(int i = 2 ; i < 5 ; i++){
+        for(int i = 3 ; i < 10 ; i++){
             permissionList.add(i);
         }
         GroupPermission internGroupPermission = saveGroupPermission(team.getId(), intern.getId());
@@ -107,7 +107,7 @@ public class TeamService {
     private GroupPermission saveGroupPermission(String teamId, String groupId){
         // json을 생성한 후 매핑하여 빈으로 만들어야 한다.
         List<Integer> permissionList = new ArrayList<>();
-        for(int i = 0 ; i <  5 ; i++){
+        for(int i = 0 ; i < 10 ; i++){
             permissionList.add(i);
         }
         GroupPermission groupPermission = GroupPermission.builder()
@@ -355,6 +355,11 @@ public class TeamService {
             userList.add(new PermissionGroupUsersDto(user.getId(), user.getName()));
         }
         return userList;
+    }
+
+    @Transactional
+    public void updateTeamPermission(String teamId){
+
     }
 
 }

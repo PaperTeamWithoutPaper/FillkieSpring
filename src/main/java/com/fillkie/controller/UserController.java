@@ -6,13 +6,18 @@ import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.response.TokenResponse;
 import com.fillkie.controller.responseDto.RefreshTokenResDto;
 import com.fillkie.security.advice.exception.TokenEmptyException;
+import com.fillkie.security.config.CustomConfig;
+import com.fillkie.security.permission.TeamPermission;
+import com.fillkie.security.permission.factory.TeamPermissionFactory;
 import com.fillkie.service.UserService;
 import com.fillkie.service.dto.AccessRefreshDto;
 import com.fillkie.service.dto.UserProfileDto;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +33,19 @@ import java.io.IOException;
 @Slf4j
 public class UserController {
 
+
   private final UserService userService;
   @Value("${oauth.google.redirect-fillkie}")
   private String redirect_fillkie;
+  private final AnnotationConfigApplicationContext factory
+      = new AnnotationConfigApplicationContext(CustomConfig.class);
+  private TeamPermission teamPermission;
 
+  @PostConstruct
+  public void initialize(){
+    TeamPermissionFactory teamPermissionFactory = (TeamPermissionFactory) factory.getBean("teamPermissionInitializer");
+    teamPermission = teamPermissionFactory.getTeamPermission();
+  }
 
   /**
    * OAuth Redirect url, Login 검증 및 인증
@@ -74,7 +88,7 @@ public class UserController {
   }
 
   @GetMapping("/test")
-  public void testToken(HttpServletRequest request, HttpServletResponse response) {
+  public String testToken(HttpServletRequest request, HttpServletResponse response) {
     log.info("UserController testToken : {}", request.getAttribute("email"));
 //        response.addHeader("Access-Control-Allow-Origin", "*");
 
@@ -82,6 +96,7 @@ public class UserController {
 //    log.info("expiredLength : {}", expiredLength);
 //    log.info("POST_URL : {}", POST_URL);
 //    log.info("GET_URL : {}", GET_URL);
-      throw new TokenEmptyException("없어");
+    System.out.println(teamPermission.INVITE_USER);
+    return String.valueOf(teamPermission.deleteUser);
   }
 }

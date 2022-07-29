@@ -1,0 +1,14 @@
+{
+    "team": {
+        "inviteUser": 0,
+        "createProject": 1,
+        "createGroup": 2,
+        "readTeamSetting": 3,
+        "updateUserGroup": 4,
+        "updateGroupPermission": 5,
+        "updateTeamSetting": 6,
+        "deleteTeam": 7,
+        "deleteGroup": 8,
+        "deleteUser": 9
+    }
+}
