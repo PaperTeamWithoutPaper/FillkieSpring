@@ -12,13 +12,12 @@ import org.springframework.stereotype.Component;
 public class TeamPermission {
 
     public Integer INVITE_USER;
-    public Integer createProject;
-    public Integer readTeamSetting;
-    public Integer updateUserGroup;
-    public Integer updateGroupPermission;
-    public Integer updateTeamSetting;
-    public Integer deleteTeam;
-    public Integer deleteGroup;
-    public Integer deleteUser;
+    public Integer CREAT_PROJECT;
+    public Integer CREATE_GROUP;
+    public Integer UPDATE_GROUP_USER_PERMISSION;
+    public Integer UPDATE_TEAM_SETTING;
+    public Integer DELETE_TEAM;
+    public Integer DELETE_GROUP;
+    public Integer DELETE_USER;
 
 }

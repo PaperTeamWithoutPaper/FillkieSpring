@@ -97,6 +97,6 @@ public class UserController {
 //    log.info("POST_URL : {}", POST_URL);
 //    log.info("GET_URL : {}", GET_URL);
     System.out.println(teamPermission.INVITE_USER);
-    return String.valueOf(teamPermission.deleteUser);
+    return String.valueOf(teamPermission.DELETE_USER);
   }
 }

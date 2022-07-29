@@ -12,11 +12,15 @@ import com.fillkie.repository.GroupPermissionRepository;
 import com.fillkie.repository.GroupRepository;
 import com.fillkie.repository.GroupUserRepository;
 import com.fillkie.repository.UserRepository;
+import com.fillkie.security.config.CustomConfig;
+import com.fillkie.security.permission.TeamPermission;
+import com.fillkie.security.permission.factory.TeamPermissionFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +35,15 @@ public class TeamPermissionService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
 
+    private final AnnotationConfigApplicationContext factory
+        = new AnnotationConfigApplicationContext(CustomConfig.class);
+    private TeamPermission teamPermission;
 
+    @PostConstruct
+    public void initialize(){
+        TeamPermissionFactory teamPermissionFactory = (TeamPermissionFactory) factory.getBean("teamPermissionInitializer");
+        teamPermission = teamPermissionFactory.getTeamPermission();
+    }
 
     /**
      * readGroupsTeam Groups 반환
@@ -84,6 +96,22 @@ public class TeamPermissionService {
                 groupUser.setGroupId(updates.getGroupId());
                 groupUserRepository.save(groupUser);
             }
+        }
+    }
+
+
+    //----------------------------------------- Permission 예외 처리-------------------------------------------
+
+    /**
+     * UpdatePermissionInterceptor : 팀의 Group, User에 대한 권한 update 권한 인가
+     */
+    public boolean CheckUpdatePermission(String userId, String teamId){
+        GroupUser groupUser = groupUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(RuntimeException::new);
+        GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupUser.getGroupId()).orElseThrow(RuntimeException::new);
+        if(groupPermission.getPermission().get(teamPermission.UPDATE_GROUP_USER_PERMISSION)){
+            return true;
+        }else{
+            return false;
         }
     }
 }

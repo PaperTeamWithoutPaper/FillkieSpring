@@ -4,6 +4,7 @@ import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseFail;
 import com.fillkie.controller.response.ResponseFailRedirect;
 import com.fillkie.security.advice.exception.AccessTokenExpiredException;
+import com.fillkie.security.advice.exception.NoPermissionException;
 import com.fillkie.security.advice.exception.RefreshTokenExpiredException;
 import com.fillkie.security.advice.exception.TokenEmptyException;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +53,21 @@ public class ExceptionAdvice {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .body(new ResponseFailRedirect(false, 422, e.getMessage(), request.getRequestURI()));
+    }
+
+    // -------------------------------------------Permission에 대한 예외 처리-------------------------------------------
+
+    /**
+     * UpdatePermissionInterceptor : 팀의 Group, User에 대한 권한 update 권한 인가
+     */
+    @ExceptionHandler(NoPermissionException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected ResponseEntity<? extends DefaultResponse> handleUpdatePermissionException(HttpServletRequest request, NoPermissionException e){
+        log.error("request URI", request.getRequestURI());
+        log.error("RefreshTokenExpiredException : exceptionHandler 호출");
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(new ResponseFail(false, 401, e.getMessage()));
     }
 
 }
