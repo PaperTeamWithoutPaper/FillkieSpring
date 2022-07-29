@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * TeamController : readGroupsTeam
+ * TeamPermissionController : readGroupsTeam
  */
 @Data
 @AllArgsConstructor

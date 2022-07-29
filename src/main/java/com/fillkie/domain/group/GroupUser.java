@@ -22,4 +22,8 @@ public class GroupUser {
         this.userId = userId;
     }
 
+    public void setGroupId(String groupId){
+        this.groupId = groupId;
+    }
+
 }

@@ -1,5 +1,20 @@
 package com.fillkie.service;
 
+import com.fillkie.controller.requestDto.UpdateTeamGroupPermissionReqDto;
+import com.fillkie.controller.responseDto.PermissionGroupUsersDto;
+import com.fillkie.controller.responseDto.PermissionGroupsResDto;
+import com.fillkie.controller.responseDto.PermissionsResDto;
+import com.fillkie.domain.group.Group;
+import com.fillkie.domain.group.GroupPermission;
+import com.fillkie.domain.group.GroupUser;
+import com.fillkie.domain.user.User;
+import com.fillkie.repository.GroupPermissionRepository;
+import com.fillkie.repository.GroupRepository;
+import com.fillkie.repository.GroupUserRepository;
+import com.fillkie.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,4 +26,64 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class TeamPermissionService {
 
+    private final GroupPermissionRepository groupPermissionRepository;
+    private final GroupUserRepository groupUserRepository;
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
+
+
+
+    /**
+     * readGroupsTeam Groups 반환
+     */
+    public List<PermissionGroupsResDto> getPermissionGroups(String teamId){
+        List<Group> groups = groupRepository.findByTeamId(teamId);
+        List<PermissionGroupsResDto> list = new ArrayList<>();
+        for(int i = 0 ; i < groups.size() ; i++){
+            list.add(new PermissionGroupsResDto(groups.get(i).getId(), groups.get(i).getName()));
+        }
+        return list;
+    }
+
+    /**
+     * Group의 permission 반환
+     */
+    public PermissionsResDto getPermissions(String groupId){
+        GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupId)
+            .orElseThrow(RuntimeException::new);
+        return new PermissionsResDto(groupPermission.getPermission());
+    }
+
+    /**
+     * Group에 속한 Users 반환
+     */
+    public List<PermissionGroupUsersDto> getPermissionGroupUsers(String teamId, String groupId){
+        List<GroupUser> groupUsers = groupUserRepository.findByTeamIdAndGroupId(teamId,
+            groupId);
+        List<PermissionGroupUsersDto> userList = new ArrayList<>();
+        for(int i = 0 ; i < groupUsers.size() ; i++){
+            User user = userRepository.findById(groupUsers.get(i).getUserId()).orElseThrow(RuntimeException::new);
+            userList.add(new PermissionGroupUsersDto(user.getId(), user.getName()));
+        }
+        return userList;
+    }
+
+
+    /**
+     * Group의 Permission과 User을 update
+     */
+    @Transactional
+    public void updateTeamPermission(String teamId, List<UpdateTeamGroupPermissionReqDto> updateTeamGroupPermissionReqDtos){
+        for(UpdateTeamGroupPermissionReqDto updates : updateTeamGroupPermissionReqDtos){
+            GroupPermission groupPermission = groupPermissionRepository.findByGroupId(
+                updates.getGroupId()).orElseThrow(RuntimeException::new);
+            groupPermission.setPermission(updates.getPermission());
+            groupPermissionRepository.save(groupPermission);
+            for(String userId : updates.getUserIds()){
+                GroupUser groupUser = groupUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(RuntimeException::new);
+                groupUser.setGroupId(updates.getGroupId());
+                groupUserRepository.save(groupUser);
+            }
+        }
+    }
 }

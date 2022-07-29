@@ -321,45 +321,4 @@ public class TeamService {
         return dateFormat.parse(date);
     }
 
-
-    /**
-     * readGroupsTeam Groups 반환
-     */
-    public List<PermissionGroupsResDto> getPermissionGroups(String teamId){
-        List<Group> groups = groupRepository.findByTeamId(teamId);
-        List<PermissionGroupsResDto> list = new ArrayList<>();
-        for(int i = 0 ; i < groups.size() ; i++){
-            list.add(new PermissionGroupsResDto(groups.get(i).getId(), groups.get(i).getName()));
-        }
-        return list;
-    }
-
-    /**
-     * Group의 permission 반환
-     */
-    public PermissionsResDto getPermissions(String groupId){
-        GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupId)
-            .orElseThrow(RuntimeException::new);
-        return new PermissionsResDto(groupPermission.getPermission());
-    }
-
-    /**
-     * Group에 속한 Users 반환
-     */
-    public List<PermissionGroupUsersDto> getPermissionGroupUsers(String teamId, String groupId){
-        List<GroupUser> groupUsers = groupUserRepository.findByTeamIdAndGroupId(teamId,
-            groupId);
-        List<PermissionGroupUsersDto> userList = new ArrayList<>();
-        for(int i = 0 ; i < groupUsers.size() ; i++){
-            User user = userRepository.findById(groupUsers.get(i).getUserId()).orElseThrow(RuntimeException::new);
-            userList.add(new PermissionGroupUsersDto(user.getId(), user.getName()));
-        }
-        return userList;
-    }
-
-    @Transactional
-    public void updateTeamPermission(String teamId){
-
-    }
-
 }

@@ -138,9 +138,4 @@ public class TeamController {
             .body(new ResponseSuccess<TeamDetailDto>(true, HttpStatus.OK.value(), "팀 명, 인원수!", teamDetailDto));
     }
 
-//    @PutMapping("permission/update/{teamId}")
-//    public ResponseEntity<? extends DefaultResponse> updatePermissionTeam(@PathVariable("teamId") String teamId){
-//        teamService.updateTeamPermission(teamId);
-//    }
-
 }
