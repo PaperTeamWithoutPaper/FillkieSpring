@@ -67,31 +67,31 @@ public class TeamService {
 //        team.addUserTeamId(userTeam.getId());
         team = teamRepository.save(team);
 
-        Group professor = saveGroup("professor", team.getId());
-        List<Integer> permissionList;
-        Group doctor = saveGroup("doctor", team.getId());
-        permissionList = new ArrayList<>();
-        for(int i = 7 ; i < 10 ; i++){
-            permissionList.add(i);
-        }
-        GroupPermission doctorGroupPermission = saveGroupPermission(team.getId(), doctor.getId());
-        declineGroupPermission(doctorGroupPermission, permissionList);
         Group master = saveGroup("master", team.getId());
+        List<Integer> permissionList;
+        Group manager = saveGroup("manager", team.getId());
         permissionList = new ArrayList<>();
-        for(int i = 5 ; i < 10 ; i++){
+        for(int i = 4 ; i < 5 ; i++){
             permissionList.add(i);
         }
-        GroupPermission masterGroupPermission = saveGroupPermission(team.getId(), master.getId());
-        declineGroupPermission(masterGroupPermission, permissionList);
-        Group intern = saveGroup("intern", team.getId());
+        GroupPermission managerGroupPermission = saveGroupPermission(team.getId(), manager.getId());
+        declineGroupPermission(managerGroupPermission, permissionList);
+        Group member = saveGroup("member", team.getId());
         permissionList = new ArrayList<>();
-        for(int i = 3 ; i < 10 ; i++){
+        for(int i = 3 ; i < 5 ; i++){
             permissionList.add(i);
         }
-        GroupPermission internGroupPermission = saveGroupPermission(team.getId(), intern.getId());
-        declineGroupPermission(internGroupPermission, permissionList);
+        GroupPermission memberGroupPermission = saveGroupPermission(team.getId(), member.getId());
+        declineGroupPermission(memberGroupPermission, permissionList);
+        Group guest = saveGroup("guest", team.getId());
+        permissionList = new ArrayList<>();
+        for(int i = 2 ; i < 5 ; i++){
+            permissionList.add(i);
+        }
+        GroupPermission guestGroupPermission = saveGroupPermission(team.getId(), guest.getId());
+        declineGroupPermission(guestGroupPermission, permissionList);
 
-        GroupUser groupUser = saveGroupUser(team.getId(), professor.getId(), userId);
+        GroupUser groupUser = saveGroupUser(team.getId(), master.getId(), userId);
 
         return userTeam.getId();
     }

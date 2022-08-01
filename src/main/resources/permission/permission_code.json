@@ -2,11 +2,9 @@
     "team": {
         "INVITE_USER": 0,
         "CREATE_PROJECT": 1,
-        "CREATE_GROUP": 2,
-        "UPDATE_GROUP_USER_PERMISSION": 3,
-        "UPDATE_TEAM_SETTING": 4,
-        "DELETE_TEAM": 5,
-        "DELETE_GROUP": 6,
-        "DELETE_USER": 7
+        "UPDATE_GROUP_USER_PERMISSION": 2,
+        "UPDATE_TEAM_SETTING": 3,
+        "DELETE_TEAM": 4,
+        "DELETE_USER": 5
     }
 }

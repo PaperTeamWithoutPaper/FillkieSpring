@@ -1,5 +1,6 @@
 package com.fillkie.controller;
 
+import com.fillkie.controller.requestDto.CreateTeamGroupReqDto;
 import com.fillkie.controller.requestDto.UpdateTeamGroupPermissionReqDto;
 import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseSuccess;
@@ -7,7 +8,6 @@ import com.fillkie.controller.responseDto.PermissionGroupUsersDto;
 import com.fillkie.controller.responseDto.PermissionGroupsResDto;
 import com.fillkie.controller.responseDto.PermissionsResDto;
 import com.fillkie.service.TeamPermissionService;
-import com.fillkie.service.TeamService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +79,13 @@ public class TeamPermissionController {
             .status(HttpStatus.OK)
             .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "Permission 갱신 성공!", "성공!"));
     }
+
+//    @PostMapping("group/create")
+//    public ResponseEntity<? extends DefaultResponse> createTeamGroup(@RequestBody @Valid
+//        CreateTeamGroupReqDto createTeamGroupReqDto){
+//        teamPermissionService.createTeamGroup(createTeamGroupReqDto.getTeamId(), createTeamGroupReqDto.getGroupName());
+//
+//    }
 
     /**
      * 팀에 그룹 생성

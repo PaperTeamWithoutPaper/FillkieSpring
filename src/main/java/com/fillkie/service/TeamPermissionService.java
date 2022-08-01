@@ -99,6 +99,14 @@ public class TeamPermissionService {
         }
     }
 
+    /**
+     * Team에 대한 Group 생성하기 - 생성 시 권한은 없다
+     */
+    @Transactional
+    public void createTeamGroup(String teamId, String groupName){
+
+    }
+
 
     //----------------------------------------- Permission 예외 처리-------------------------------------------
 
