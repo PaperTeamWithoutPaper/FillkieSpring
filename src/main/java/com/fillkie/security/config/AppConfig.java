@@ -2,6 +2,7 @@ package com.fillkie.security.config;
 
 import com.fillkie.security.config.interceptor.BearerAuthInterceptor;
 import com.fillkie.security.config.interceptor.RefreshAuthInterceptor;
+import com.fillkie.security.config.interceptor.UpdatePermissionInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ public class AppConfig implements WebMvcConfigurer {
   private final BearerAuthInterceptor bearerAuthInterceptor;
 
   private final RefreshAuthInterceptor refreshAuthInterceptor;
+  private final UpdatePermissionInterceptor updatePermissionInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
@@ -38,5 +40,8 @@ public class AppConfig implements WebMvcConfigurer {
         .order(1)
         .addPathPatterns("/**")
         .excludePathPatterns("/user/oauth/**", "/user/test");
+    registry.addInterceptor(updatePermissionInterceptor)
+        .order(2)
+        .addPathPatterns("/permission/update/**", "/permission/group/create");
   }
 }

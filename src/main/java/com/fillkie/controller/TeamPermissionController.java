@@ -80,12 +80,18 @@ public class TeamPermissionController {
             .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "Permission 갱신 성공!", "성공!"));
     }
 
-//    @PostMapping("group/create")
-//    public ResponseEntity<? extends DefaultResponse> createTeamGroup(@RequestBody @Valid
-//        CreateTeamGroupReqDto createTeamGroupReqDto){
-//        teamPermissionService.createTeamGroup(createTeamGroupReqDto.getTeamId(), createTeamGroupReqDto.getGroupName());
-//
-//    }
+    /**
+     * 팀에 Group 생성
+     */
+    @PostMapping("group/create")
+    public ResponseEntity<? extends DefaultResponse> createTeamGroup(@RequestBody @Valid
+        CreateTeamGroupReqDto createTeamGroupReqDto){
+        teamPermissionService.createTeamGroup(createTeamGroupReqDto.getTeamId(), createTeamGroupReqDto.getGroupName());
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "Group 생성 성공!", "성공!"));
+    }
 
     /**
      * 팀에 그룹 생성

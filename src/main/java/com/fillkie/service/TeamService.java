@@ -55,6 +55,7 @@ public class TeamService {
     public String saveTeam(CreateTeamReqDto createTeamDto, String userId){
         String teamName = createTeamDto.getTeamName();
 
+        log.info("팀 생성 시작!");
         Team team = Team.builder()
             .name(teamName)
             .image(null)
@@ -67,30 +68,39 @@ public class TeamService {
 //        team.addUserTeamId(userTeam.getId());
         team = teamRepository.save(team);
 
+        // master
         Group master = saveGroup("master", team.getId());
+        GroupPermission masterGroupPermission = saveGroupPermission(team.getId(), master.getId());
+
+        // manager
         List<Integer> permissionList;
         Group manager = saveGroup("manager", team.getId());
         permissionList = new ArrayList<>();
-        for(int i = 4 ; i < 5 ; i++){
+        for(int i = 4 ; i < 6 ; i++){
             permissionList.add(i);
         }
         GroupPermission managerGroupPermission = saveGroupPermission(team.getId(), manager.getId());
         declineGroupPermission(managerGroupPermission, permissionList);
+
+        // member
         Group member = saveGroup("member", team.getId());
         permissionList = new ArrayList<>();
-        for(int i = 3 ; i < 5 ; i++){
+        for(int i = 3 ; i < 6 ; i++){
             permissionList.add(i);
         }
         GroupPermission memberGroupPermission = saveGroupPermission(team.getId(), member.getId());
         declineGroupPermission(memberGroupPermission, permissionList);
+
+        // guest
         Group guest = saveGroup("guest", team.getId());
         permissionList = new ArrayList<>();
-        for(int i = 2 ; i < 5 ; i++){
+        for(int i = 2 ; i < 6 ; i++){
             permissionList.add(i);
         }
         GroupPermission guestGroupPermission = saveGroupPermission(team.getId(), guest.getId());
         declineGroupPermission(guestGroupPermission, permissionList);
 
+        // master groupUser
         GroupUser groupUser = saveGroupUser(team.getId(), master.getId(), userId);
 
         return userTeam.getId();
@@ -107,7 +117,7 @@ public class TeamService {
     private GroupPermission saveGroupPermission(String teamId, String groupId){
         // json을 생성한 후 매핑하여 빈으로 만들어야 한다.
         List<Integer> permissionList = new ArrayList<>();
-        for(int i = 0 ; i < 10 ; i++){
+        for(int i = 0 ; i < 6 ; i++){
             permissionList.add(i);
         }
         GroupPermission groupPermission = GroupPermission.builder()
@@ -237,10 +247,10 @@ public class TeamService {
         // Team 조회
         Team team = teamRepository.findById(teamInvite.getTeamId()).orElseThrow(RuntimeException::new);
 
-        // Group "intern"에 user 추가
-        Group group = groupRepository.findByNameAndTeamId("intern", team.getId()).orElseThrow(RuntimeException::new);
+        // Group "guest"에 user 추가
+        Group group = groupRepository.findByNameAndTeamId("guest", team.getId()).orElseThrow(RuntimeException::new);
         groupRepository.save(group);
-        log.info("TeamSevice group intern 추가 성공 : {}", true);
+        log.info("TeamSevice group guest 추가 성공 : {}", true);
 
         // GroupUser 생성
         GroupUser groupUser = GroupUser.builder()
