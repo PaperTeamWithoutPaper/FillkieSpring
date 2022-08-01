@@ -67,31 +67,31 @@ public class TeamService {
 //        team.addUserTeamId(userTeam.getId());
         team = teamRepository.save(team);
 
-        Group professor = saveGroup("professor", team.getId());
+        Group master = saveGroup("master", team.getId());
         List<Integer> permissionList;
-        Group doctor = saveGroup("doctor", team.getId());
+        Group manager = saveGroup("manager", team.getId());
         permissionList = new ArrayList<>();
         for(int i = 4 ; i < 5 ; i++){
             permissionList.add(i);
         }
-        GroupPermission doctorGroupPermission = saveGroupPermission(team.getId(), doctor.getId());
-        declineGroupPermission(doctorGroupPermission, permissionList);
-        Group master = saveGroup("master", team.getId());
+        GroupPermission managerGroupPermission = saveGroupPermission(team.getId(), manager.getId());
+        declineGroupPermission(managerGroupPermission, permissionList);
+        Group member = saveGroup("member", team.getId());
         permissionList = new ArrayList<>();
         for(int i = 3 ; i < 5 ; i++){
             permissionList.add(i);
         }
-        GroupPermission masterGroupPermission = saveGroupPermission(team.getId(), master.getId());
-        declineGroupPermission(masterGroupPermission, permissionList);
-        Group intern = saveGroup("intern", team.getId());
+        GroupPermission memberGroupPermission = saveGroupPermission(team.getId(), member.getId());
+        declineGroupPermission(memberGroupPermission, permissionList);
+        Group guest = saveGroup("guest", team.getId());
         permissionList = new ArrayList<>();
         for(int i = 2 ; i < 5 ; i++){
             permissionList.add(i);
         }
-        GroupPermission internGroupPermission = saveGroupPermission(team.getId(), intern.getId());
-        declineGroupPermission(internGroupPermission, permissionList);
+        GroupPermission guestGroupPermission = saveGroupPermission(team.getId(), guest.getId());
+        declineGroupPermission(guestGroupPermission, permissionList);
 
-        GroupUser groupUser = saveGroupUser(team.getId(), professor.getId(), userId);
+        GroupUser groupUser = saveGroupUser(team.getId(), master.getId(), userId);
 
         return userTeam.getId();
     }
@@ -107,7 +107,7 @@ public class TeamService {
     private GroupPermission saveGroupPermission(String teamId, String groupId){
         // json을 생성한 후 매핑하여 빈으로 만들어야 한다.
         List<Integer> permissionList = new ArrayList<>();
-        for(int i = 0 ; i <  5 ; i++){
+        for(int i = 0 ; i < 10 ; i++){
             permissionList.add(i);
         }
         GroupPermission groupPermission = GroupPermission.builder()
@@ -319,42 +319,6 @@ public class TeamService {
     private Date parseDateTime(String date) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
         return dateFormat.parse(date);
-    }
-
-
-    /**
-     * readGroupsTeam Groups 반환
-     */
-    public List<PermissionGroupsResDto> getPermissionGroups(String teamId){
-        List<Group> groups = groupRepository.findByTeamId(teamId);
-        List<PermissionGroupsResDto> list = new ArrayList<>();
-        for(int i = 0 ; i < groups.size() ; i++){
-            list.add(new PermissionGroupsResDto(groups.get(i).getId(), groups.get(i).getName()));
-        }
-        return list;
-    }
-
-    /**
-     * Group의 permission 반환
-     */
-    public PermissionsResDto getPermissions(String groupId){
-        GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupId)
-            .orElseThrow(RuntimeException::new);
-        return new PermissionsResDto(groupPermission.getPermission());
-    }
-
-    /**
-     * Group에 속한 Users 반환
-     */
-    public List<PermissionGroupUsersDto> getPermissionGroupUsers(String teamId, String groupId){
-        List<GroupUser> groupUsers = groupUserRepository.findByTeamIdAndGroupId(teamId,
-            groupId);
-        List<PermissionGroupUsersDto> userList = new ArrayList<>();
-        for(int i = 0 ; i < groupUsers.size() ; i++){
-            User user = userRepository.findById(groupUsers.get(i).getUserId()).orElseThrow(RuntimeException::new);
-            userList.add(new PermissionGroupUsersDto(user.getId(), user.getName()));
-        }
-        return userList;
     }
 
 }

@@ -1,0 +1,10 @@
+{
+    "team": {
+        "INVITE_USER": 0,
+        "CREATE_PROJECT": 1,
+        "UPDATE_GROUP_USER_PERMISSION": 2,
+        "UPDATE_TEAM_SETTING": 3,
+        "DELETE_TEAM": 4,
+        "DELETE_USER": 5
+    }
+}

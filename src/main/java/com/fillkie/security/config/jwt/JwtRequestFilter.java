@@ -33,7 +33,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class JwtRequestFilter  {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final String AUTHORIZATION = "Authorization";
@@ -63,7 +63,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private static final String[] whitelist = {"/static/*", "/favicon.ico", "/user/oauth/*", "/user/refreshToken"};
 
 
-	@Override
+//	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// jwt local storage 사용 시
@@ -88,25 +88,25 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //			.forEachRemaining(header -> log.info("Extractor header name : {}, value : {}", header, request.getHeaders(header)));
 
 		// jwt 헤더 사용 시
-		if(isLoginCheckPath(request)) {
-
-			String token = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
-
-			// 토큰이 없으므로 로그인하여 access, refresh token 발급
-			// 가려던 주소로 리다이렉트
-			if (token.isEmpty()) {
-				throw new TokenEmptyException("토큰이 없습니다!");
-			}
-
-			// 시간 만료로 refresh token 요청 응답
-			if (!jwtTokenProvider.validateToken(token, ACCESS)) {
-				throw new AccessTokenExpiredException("AccessToken이 만료되었습니다!");
-			}
-
-			String id = jwtTokenProvider.getSubject(token, ACCESS);
-			log.info("JwtRequestFilter userId : {}", id);
-			request.setAttribute("id", id);
-		}
+//		if(isLoginCheckPath(request)) {
+//
+//			String token = authorizationExtractor.extract(request, "Bearer", AUTHORIZATION);
+//
+//			// 토큰이 없으므로 로그인하여 access, refresh token 발급
+//			// 가려던 주소로 리다이렉트
+//			if (token.isEmpty()) {
+//				throw new TokenEmptyException("토큰이 없습니다!");
+//			}
+//
+//			// 시간 만료로 refresh token 요청 응답
+//			if (!jwtTokenProvider.validateToken(token, ACCESS)) {
+//				throw new AccessTokenExpiredException("AccessToken이 만료되었습니다!");
+//			}
+//
+//			String id = jwtTokenProvider.getSubject(token, ACCESS);
+//			log.info("JwtRequestFilter userId : {}", id);
+//			request.setAttribute("id", id);
+//		}
 		filterChain.doFilter(request,response);
 	}
 
@@ -121,7 +121,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	/**
 	 * OncePerRequestFilter에서도 이 화이트리스트 탐지하지 않는다
 	 */
-	@Override
+//	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		return PatternMatchUtils.simpleMatch(String.valueOf(EXCLUDE_URL), request.getServletPath());
 	}

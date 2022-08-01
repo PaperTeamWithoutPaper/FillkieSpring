@@ -37,5 +37,9 @@ public class GroupPermission {
         }
     }
 
+    public void setPermission(Map<Integer, Boolean> permission){
+        this.permission = permission;
+    }
+
 
 }
