@@ -16,6 +16,7 @@ import com.fillkie.security.config.CustomConfig;
 import com.fillkie.security.permission.TeamPermission;
 import com.fillkie.security.permission.factory.TeamPermissionFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -104,7 +105,34 @@ public class TeamPermissionService {
      */
     @Transactional
     public void createTeamGroup(String teamId, String groupName){
+        Group group = saveGroup(groupName, teamId);
+        GroupPermission groupPermission = saveGroupPermission(teamId, group.getId());
+    }
 
+    // TeamService와 다르게 모든 권한을 무효처리 한다.
+    private GroupPermission saveGroupPermission(String teamId, String groupId){
+        // json을 생성한 후 매핑하여 빈으로 만들어야 한다.
+        List<Integer> permissionList = new ArrayList<>();
+        for(int i = 0 ; i < 6 ; i++){
+            permissionList.add(i);
+        }
+        GroupPermission groupPermission = GroupPermission.builder()
+            .teamId(teamId)
+            .groupId(groupId)
+            .permission(new HashMap<>())
+            .build();
+        groupPermission.declinePermission(permissionList);
+        groupPermissionRepository.insert(groupPermission);
+        return groupPermission;
+    }
+
+    private Group saveGroup(String groupName, String teamId){
+        Group group = Group.builder()
+            .name(groupName)
+            .teamId(teamId)
+            .build();
+
+        return groupRepository.insert(group);
     }
 
 
