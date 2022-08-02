@@ -11,4 +11,6 @@ import lombok.Data;
 public class PermissionGroupUsersDto {
     private String userId;
     private String name;
+    private String groupId;
+    private String groupName;
 }

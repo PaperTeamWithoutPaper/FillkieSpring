@@ -83,10 +83,10 @@ public class TeamPermissionController {
     /**
      * 팀에 Group 생성
      */
-    @PostMapping("group/create")
-    public ResponseEntity<? extends DefaultResponse> createTeamGroup(@RequestBody @Valid
+    @PostMapping("group/create/{teamId}")
+    public ResponseEntity<? extends DefaultResponse> createTeamGroup(@PathVariable("teamId") String teamId, @RequestBody @Valid
         CreateTeamGroupReqDto createTeamGroupReqDto){
-        teamPermissionService.createTeamGroup(createTeamGroupReqDto.getTeamId(), createTeamGroupReqDto.getGroupName());
+        teamPermissionService.createTeamGroup(teamId, createTeamGroupReqDto.getGroupName());
 
         return ResponseEntity
             .status(HttpStatus.OK)

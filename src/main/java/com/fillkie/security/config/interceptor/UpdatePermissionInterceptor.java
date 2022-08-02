@@ -26,7 +26,7 @@ public class UpdatePermissionInterceptor implements HandlerInterceptor {
         String userId = (String) request.getAttribute("id");
         String teamId = request.getParameter("teamId");
 
-        if(!teamPermissionService.CheckUpdatePermission(userId, teamId)){
+        if(!teamPermissionService.checkUpdatePermission(userId, teamId)){
             throw new NoPermissionException("Permission Update 권한이 없습니다!");
         }
 

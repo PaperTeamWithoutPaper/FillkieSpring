@@ -76,7 +76,9 @@ public class TeamPermissionService {
         List<PermissionGroupUsersDto> userList = new ArrayList<>();
         for(int i = 0 ; i < groupUsers.size() ; i++){
             User user = userRepository.findById(groupUsers.get(i).getUserId()).orElseThrow(RuntimeException::new);
-            userList.add(new PermissionGroupUsersDto(user.getId(), user.getName()));
+            Group group = groupRepository.findById(groupId)
+                .orElseThrow(RuntimeException::new);
+            userList.add(new PermissionGroupUsersDto(user.getId(), user.getName(), groupId, group.getName()));
         }
         return userList;
     }
@@ -141,7 +143,7 @@ public class TeamPermissionService {
     /**
      * UpdatePermissionInterceptor : 팀의 Group, User에 대한 권한 update 권한 인가
      */
-    public boolean CheckUpdatePermission(String userId, String teamId){
+    public boolean checkUpdatePermission(String userId, String teamId){
         log.info("checkUpdatePermission userId : {}", userId);
         log.info("checkUpdatePermission teamId : {}", teamId);
         GroupUser groupUser = groupUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(RuntimeException::new);
