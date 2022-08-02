@@ -42,6 +42,6 @@ public class AppConfig implements WebMvcConfigurer {
         .excludePathPatterns("/user/oauth/**", "/user/test");
     registry.addInterceptor(updatePermissionInterceptor)
         .order(2)
-        .addPathPatterns("/permission/update/**", "/permission/group/create");
+        .addPathPatterns("/permission/update/**", "/permission/group/create/**");
   }
 }

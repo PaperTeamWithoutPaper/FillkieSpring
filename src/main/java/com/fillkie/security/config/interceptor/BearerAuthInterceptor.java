@@ -53,7 +53,7 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
     }
 
     String id = jwtTokenProvider.getSubject(token, ACCESS);
-    log.info("JwtRequestFilter userId : {}", id);
+    log.info(">>> interceptor userId : {}", id);
     request.setAttribute("id", id);
 
     // !!!Refresh Token으로 재발급?
