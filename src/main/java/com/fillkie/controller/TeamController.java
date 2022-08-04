@@ -61,8 +61,8 @@ public class TeamController {
 
     }
 
-    @GetMapping("invite")
-    public ResponseEntity<? extends DefaultResponse> inviteTeam(@RequestParam("teamId") String teamId){
+    @GetMapping("invite/{teamId}")
+    public ResponseEntity<? extends DefaultResponse> inviteTeam(@PathVariable("teamId") String teamId){
         String url = UUID.randomUUID().toString();
         url = url.replaceAll("[-]", "").trim();
 
