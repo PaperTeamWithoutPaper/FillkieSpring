@@ -144,11 +144,24 @@ public class TeamPermissionService {
      * UpdatePermissionInterceptor : 팀의 Group, User에 대한 권한 update 권한 인가
      */
     public boolean checkUpdatePermission(String userId, String teamId){
-        log.info("checkUpdatePermission userId : {}", userId);
-        log.info("checkUpdatePermission teamId : {}", teamId);
+        log.info("checkUpdatePermission start");
         GroupUser groupUser = groupUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(RuntimeException::new);
         GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupUser.getGroupId()).orElseThrow(RuntimeException::new);
         if(groupPermission.getPermission().get(teamPermission.UPDATE_GROUP_USER_PERMISSION)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * InviteUserPermissionInterceptor : 팀의 User이 invite 할 수 있는 권한 인가
+     */
+    public boolean checkInvitePermission(String userId, String teamId){
+        log.info("checkInvitePermission start");
+        GroupUser groupUser = groupUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(RuntimeException::new);
+        GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupUser.getGroupId()).orElseThrow(RuntimeException::new);
+        if(groupPermission.getPermission().get(teamPermission.INVITE_USER)){
             return true;
         }else{
             return false;
