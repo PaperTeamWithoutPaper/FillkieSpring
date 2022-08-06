@@ -47,6 +47,7 @@ public class AppConfig implements WebMvcConfigurer {
         .addPathPatterns("/permission/update/**", "/permission/group/create/**");
     registry.addInterceptor(inviteUserPermissionInterceptor)
         .order(3)
-        .addPathPatterns("/team/invite/**");
+        .addPathPatterns("/team/invite/**")
+        .excludePathPatterns("/team/invite/validation", "/team/invite/accept");
   }
 }
