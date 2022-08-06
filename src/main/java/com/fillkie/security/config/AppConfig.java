@@ -1,6 +1,7 @@
 package com.fillkie.security.config;
 
 import com.fillkie.security.config.interceptor.BearerAuthInterceptor;
+import com.fillkie.security.config.interceptor.InviteUserPermissionInterceptor;
 import com.fillkie.security.config.interceptor.RefreshAuthInterceptor;
 import com.fillkie.security.config.interceptor.UpdatePermissionInterceptor;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class AppConfig implements WebMvcConfigurer {
 
   private final RefreshAuthInterceptor refreshAuthInterceptor;
   private final UpdatePermissionInterceptor updatePermissionInterceptor;
+  private final InviteUserPermissionInterceptor inviteUserPermissionInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
@@ -43,5 +45,8 @@ public class AppConfig implements WebMvcConfigurer {
     registry.addInterceptor(updatePermissionInterceptor)
         .order(2)
         .addPathPatterns("/permission/update/**", "/permission/group/create/**");
+    registry.addInterceptor(inviteUserPermissionInterceptor)
+        .order(3)
+        .addPathPatterns("/team/invite/**");
   }
 }
