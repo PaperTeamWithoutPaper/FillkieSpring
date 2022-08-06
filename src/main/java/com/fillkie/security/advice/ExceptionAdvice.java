@@ -61,13 +61,13 @@ public class ExceptionAdvice {
      * UpdatePermissionInterceptor : 팀의 Group, User에 대한 권한 update 권한 인가
      */
     @ExceptionHandler(NoPermissionException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     protected ResponseEntity<? extends DefaultResponse> handleUpdatePermissionException(HttpServletRequest request, NoPermissionException e){
         log.error("request URI", request.getRequestURI());
-        log.error("RefreshTokenExpiredException : exceptionHandler 호출");
+        log.error("NoPermissionException : exceptionHandler 호출");
         return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(new ResponseFail(false, 401, e.getMessage()));
+            .status(HttpStatus.FORBIDDEN)
+            .body(new ResponseFail(false, 403, e.getMessage()));
     }
 
 }
