@@ -31,10 +31,10 @@ public class AppConfig implements WebMvcConfigurer {
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     logger.info(">>> 인터셉터 등록");
-    registry.addInterceptor(refreshAuthInterceptor)
-        .order(0)
+//    registry.addInterceptor(refreshAuthInterceptor)
+//        .order(0)
         // /**로 변경해야 한다.
-        .addPathPatterns("/user/refresh/**");
+//        .addPathPatterns("/user/refresh/**");
 //        .excludePathPatterns("/user/oauth/**");
 //                .addPathPatterns("/api/booking/{bookingId}")
 //                .addPathPatterns("/api/rooms/{userId}/wish/{roomId}");
