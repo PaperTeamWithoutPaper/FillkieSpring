@@ -1,6 +1,7 @@
 package com.fillkie.controller;
 
 import com.fillkie.controller.requestDto.CreateTeamGroupReqDto;
+import com.fillkie.controller.requestDto.DeleteTeamUsersReqDto;
 import com.fillkie.controller.requestDto.UpdateTeamGroupPermissionReqDto;
 import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseSuccess;
@@ -102,4 +103,13 @@ public class TeamPermissionController {
 //
 //    }
 
+    @PostMapping("delete/user")
+    public ResponseEntity<? extends DefaultResponse> deleteUsersTeam(@RequestBody @Valid
+    List<DeleteTeamUsersReqDto> deleteTeamUserReqDto){
+        String result = teamPermissionService.deleteTeamUsers(deleteTeamUserReqDto);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "Team에 Users 삭제 성공!", result));
+    }
 }
