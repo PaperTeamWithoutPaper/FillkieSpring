@@ -1,9 +1,11 @@
 package com.fillkie.service;
 
+import com.fillkie.controller.requestDto.DeleteTeamUsersReqDto;
 import com.fillkie.controller.requestDto.UpdateTeamGroupPermissionReqDto;
 import com.fillkie.controller.responseDto.PermissionGroupUsersDto;
 import com.fillkie.controller.responseDto.PermissionGroupsResDto;
 import com.fillkie.controller.responseDto.PermissionsResDto;
+import com.fillkie.domain.UserTeam;
 import com.fillkie.domain.group.Group;
 import com.fillkie.domain.group.GroupPermission;
 import com.fillkie.domain.group.GroupUser;
@@ -12,12 +14,14 @@ import com.fillkie.repository.GroupPermissionRepository;
 import com.fillkie.repository.GroupRepository;
 import com.fillkie.repository.GroupUserRepository;
 import com.fillkie.repository.UserRepository;
+import com.fillkie.repository.UserTeamRepository;
 import com.fillkie.security.config.CustomConfig;
 import com.fillkie.security.permission.TeamPermission;
 import com.fillkie.security.permission.factory.TeamPermissionFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +39,7 @@ public class TeamPermissionService {
     private final GroupUserRepository groupUserRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final UserTeamRepository userTeamRepository;
 
     private final AnnotationConfigApplicationContext factory
         = new AnnotationConfigApplicationContext(CustomConfig.class);
@@ -135,6 +140,20 @@ public class TeamPermissionService {
             .build();
 
         return groupRepository.insert(group);
+    }
+
+    /**
+     * Team에 소속된 Users delete
+     */
+    public String deleteTeamUsers(List<DeleteTeamUsersReqDto> deleteTeamUsersReqDto){
+
+        for(DeleteTeamUsersReqDto deleteTeamUser : deleteTeamUsersReqDto){
+            String UserTeamId = userTeamRepository.deleteByUserIdAndTeamId(deleteTeamUser.getUserId(), deleteTeamUser.getTeamId());
+            String groupUserId = groupUserRepository.deleteByUserIdAndGroupId(deleteTeamUser.getUserId(),
+                deleteTeamUser.getGroupId());
+        }
+
+        return "Success";
     }
 
 

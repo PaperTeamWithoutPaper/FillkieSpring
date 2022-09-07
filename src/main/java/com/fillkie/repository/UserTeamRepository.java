@@ -12,6 +12,6 @@ public interface UserTeamRepository extends MongoRepository<UserTeam, String> {
     public List<UserTeam> findByUserId(String userId);
     @Nullable
     public Optional<UserTeam> findByUserIdAndTeamId(String userId, String teamId);
-
     public List<UserTeam> findByTeamId(String teamId);
+    public String deleteByUserIdAndTeamId(String userId, String teamId);
 }
