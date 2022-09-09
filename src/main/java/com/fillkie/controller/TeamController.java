@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -136,6 +137,19 @@ public class TeamController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new ResponseSuccess<TeamDetailDto>(true, HttpStatus.OK.value(), "팀 명, 인원수!", teamDetailDto));
+    }
+
+    /**
+     * Team delete
+     */
+    @DeleteMapping("delete/{teamId}")
+    public ResponseEntity<? extends DefaultResponse> deleteTeam(@PathVariable @Valid String teamId){
+        // project 호출
+        String result = teamService.deleteTeam(teamId);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new ResponseSuccess<String>(true, HttpStatus.OK.value(), "팀 삭제 성공!", result));
     }
 
 

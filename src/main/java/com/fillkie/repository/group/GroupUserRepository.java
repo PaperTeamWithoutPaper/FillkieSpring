@@ -1,4 +1,4 @@
-package com.fillkie.repository;
+package com.fillkie.repository.group;
 
 import com.fillkie.domain.group.GroupUser;
 import java.util.List;
@@ -9,5 +9,6 @@ public interface GroupUserRepository extends MongoRepository<GroupUser, String> 
     public Optional<GroupUser> findById(String id);
     public List<GroupUser> findByTeamIdAndGroupId(String teamId, String groupId);
     public Optional<GroupUser> findByUserIdAndTeamId(String userId, String teamId);
-    public String deleteByUserIdAndGroupId(String userId, String groupId);
+    public Long deleteByUserIdAndGroupId(String userId, String groupId);
+    public Long deleteByTeamId(String teamId);
 }

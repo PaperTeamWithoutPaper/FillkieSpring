@@ -1,4 +1,4 @@
-package com.fillkie.repository;
+package com.fillkie.repository.group;
 
 import com.fillkie.domain.group.Group;
 import java.util.List;

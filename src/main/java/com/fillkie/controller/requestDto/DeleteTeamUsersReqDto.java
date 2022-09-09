@@ -11,8 +11,6 @@ import lombok.Data;
 public class DeleteTeamUsersReqDto {
     @NotBlank(message = "userId를 전송해주세요!")
     private String userId;
-    @NotBlank(message = "teamId를 전송해주세요!")
-    private String teamId;
     @NotBlank(message = "groupId를 전송해주세요!")
     private String groupId;
 

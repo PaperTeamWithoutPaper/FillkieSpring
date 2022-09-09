@@ -6,4 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface TeamRepository extends MongoRepository<Team, String> {
     public Optional<Team> findById(String id);
+    public void deleteById(String id);
 }

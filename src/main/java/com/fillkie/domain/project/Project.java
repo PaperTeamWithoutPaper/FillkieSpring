@@ -1,4 +1,4 @@
-package com.fillkie.domain;
+package com.fillkie.domain.project;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,17 +11,15 @@ public class Project {
 
   @Id
   private String id;
-  private String name;
   private String dir;
-  private Boolean expired;
+  private String name;
   private String ownerId;
   private String teamId;
 
   @Builder
-  public Project(String name, String dir, Boolean expired, String ownerId, String teamId) {
-    this.name = name;
+  public Project(String dir, String name, String ownerId, String teamId) {
     this.dir = dir;
-    this.expired = expired;
+    this.name = name;
     this.ownerId = ownerId;
     this.teamId = teamId;
   }

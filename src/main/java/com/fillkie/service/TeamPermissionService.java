@@ -5,23 +5,21 @@ import com.fillkie.controller.requestDto.UpdateTeamGroupPermissionReqDto;
 import com.fillkie.controller.responseDto.PermissionGroupUsersDto;
 import com.fillkie.controller.responseDto.PermissionGroupsResDto;
 import com.fillkie.controller.responseDto.PermissionsResDto;
-import com.fillkie.domain.UserTeam;
 import com.fillkie.domain.group.Group;
 import com.fillkie.domain.group.GroupPermission;
 import com.fillkie.domain.group.GroupUser;
 import com.fillkie.domain.user.User;
-import com.fillkie.repository.GroupPermissionRepository;
-import com.fillkie.repository.GroupRepository;
-import com.fillkie.repository.GroupUserRepository;
-import com.fillkie.repository.UserRepository;
-import com.fillkie.repository.UserTeamRepository;
+import com.fillkie.repository.group.GroupPermissionRepository;
+import com.fillkie.repository.group.GroupRepository;
+import com.fillkie.repository.group.GroupUserRepository;
+import com.fillkie.repository.user.UserRepository;
+import com.fillkie.repository.user.UserTeamRepository;
 import com.fillkie.security.config.CustomConfig;
 import com.fillkie.security.permission.TeamPermission;
 import com.fillkie.security.permission.factory.TeamPermissionFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -145,11 +143,11 @@ public class TeamPermissionService {
     /**
      * Team에 소속된 Users delete
      */
-    public String deleteTeamUsers(List<DeleteTeamUsersReqDto> deleteTeamUsersReqDto){
+    public String deleteTeamUsers(String teamId, List<DeleteTeamUsersReqDto> deleteTeamUsersReqDto){
 
         for(DeleteTeamUsersReqDto deleteTeamUser : deleteTeamUsersReqDto){
-            String UserTeamId = userTeamRepository.deleteByUserIdAndTeamId(deleteTeamUser.getUserId(), deleteTeamUser.getTeamId());
-            String groupUserId = groupUserRepository.deleteByUserIdAndGroupId(deleteTeamUser.getUserId(),
+            Long UserTeamCnt = userTeamRepository.deleteByUserIdAndTeamId(deleteTeamUser.getUserId(), teamId);
+            Long groupUserCnt = groupUserRepository.deleteByUserIdAndGroupId(deleteTeamUser.getUserId(),
                 deleteTeamUser.getGroupId());
         }
 
@@ -181,6 +179,36 @@ public class TeamPermissionService {
         GroupUser groupUser = groupUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(RuntimeException::new);
         GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupUser.getGroupId()).orElseThrow(RuntimeException::new);
         if(groupPermission.getPermission().get(teamPermission.INVITE_USER)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * DeleteUsersPermission : 팀의 User delete 권한 인가
+     */
+    public boolean checkDeleteUsersPermission(String userId, String teamId){
+        log.info("checkDeleteUsersPermission start");
+
+        GroupUser groupUser = groupUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(RuntimeException::new);
+        GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupUser.getGroupId()).orElseThrow(RuntimeException::new);
+        if(groupPermission.getPermission().get(teamPermission.DELETE_USER)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * DeleteTeamPermission : 팀의 User이 Team delete 권한 인가
+     */
+    public boolean checkDeleteTeamPermission(String userId, String teamId){
+        log.info("checkDeleteTeamPermission start");
+
+        GroupUser groupUser = groupUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(RuntimeException::new);
+        GroupPermission groupPermission = groupPermissionRepository.findByGroupId(groupUser.getGroupId()).orElseThrow(RuntimeException::new);
+        if(groupPermission.getPermission().get(teamPermission.DELETE_TEAM)){
             return true;
         }else{
             return false;

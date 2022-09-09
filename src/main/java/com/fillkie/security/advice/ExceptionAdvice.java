@@ -59,6 +59,9 @@ public class ExceptionAdvice {
 
     /**
      * UpdatePermissionInterceptor : 팀의 Group, User에 대한 권한 update 권한 인가
+     * InviteUserPermissionInterceptor : 팀의 User이 invite 할 수 있는 권한 인가
+     * DeleteUsersPermission : 팀의 User delete 권한 인가
+     * DeleteTeamPermission : 팀의 User이 Team delete 권한 인가
      */
     @ExceptionHandler(NoPermissionException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
