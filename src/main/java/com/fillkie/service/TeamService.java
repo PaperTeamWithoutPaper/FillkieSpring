@@ -2,21 +2,19 @@ package com.fillkie.service;
 
 import com.fillkie.controller.requestDto.CreateTeamReqDto;
 import com.fillkie.controller.responseDto.InviteTeamDetail;
-import com.fillkie.controller.responseDto.PermissionGroupUsersDto;
-import com.fillkie.controller.responseDto.PermissionGroupsResDto;
-import com.fillkie.controller.responseDto.PermissionsResDto;
 import com.fillkie.domain.group.Group;
 import com.fillkie.domain.group.GroupPermission;
 import com.fillkie.domain.group.GroupUser;
 import com.fillkie.domain.UserTeam;
 import com.fillkie.domain.team.Team;
 import com.fillkie.domain.team.TeamInvite;
-import com.fillkie.domain.user.User;
-import com.fillkie.repository.GroupPermissionRepository;
-import com.fillkie.repository.GroupRepository;
-import com.fillkie.repository.GroupUserRepository;
-import com.fillkie.repository.UserRepository;
-import com.fillkie.repository.UserTeamRepository;
+import com.fillkie.repository.group.GroupPermissionRepository;
+import com.fillkie.repository.group.GroupRepository;
+import com.fillkie.repository.group.GroupUserRepository;
+import com.fillkie.repository.project.ProjectPermissionRepository;
+import com.fillkie.repository.project.ProjectRepository;
+import com.fillkie.repository.user.UserRepository;
+import com.fillkie.repository.user.UserTeamRepository;
 import com.fillkie.repository.team.TeamInviteRepository;
 import com.fillkie.repository.team.TeamRepository;
 import com.fillkie.service.dto.TeamDetailDto;
@@ -46,6 +44,8 @@ public class TeamService {
     private final UserTeamRepository userTeamRepository;
     private final UserRepository userRepository;
     private final GroupPermissionRepository groupPermissionRepository;
+    private final ProjectRepository projectRepository;
+    private final ProjectPermissionRepository projectPermissionRepository;
 
     /**
      * team 저장 : userTeamId 반환
@@ -274,6 +274,22 @@ public class TeamService {
         teamRepository.save(team);
 
         return userTeam.getId();
+    }
+
+    /**
+     *
+     * Delete Team
+     */
+    public String deleteTeam(String teamId){
+
+        Long userTeamCnt = userTeamRepository.deleteByTeamId(teamId);
+        Long groupUserCnt = groupUserRepository.deleteByTeamId(teamId);
+        Long groupPermissionCnt = groupPermissionRepository.deleteByTeamId(teamId);
+        Long projectCnt = projectRepository.deleteByTeamId(teamId);
+        Long projectPermissionCnt = projectPermissionRepository.deleteByTeamId(teamId);
+        teamRepository.deleteById(teamId);
+
+        return "success";
     }
 
 //    /**

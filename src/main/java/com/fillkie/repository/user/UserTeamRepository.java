@@ -1,4 +1,4 @@
-package com.fillkie.repository;
+package com.fillkie.repository.user;
 
 import com.fillkie.domain.UserTeam;
 import com.mongodb.lang.Nullable;
@@ -13,5 +13,6 @@ public interface UserTeamRepository extends MongoRepository<UserTeam, String> {
     @Nullable
     public Optional<UserTeam> findByUserIdAndTeamId(String userId, String teamId);
     public List<UserTeam> findByTeamId(String teamId);
-    public String deleteByUserIdAndTeamId(String userId, String teamId);
+    public Long deleteByUserIdAndTeamId(String userId, String teamId);
+    public Long deleteByTeamId(String teamId);
 }

@@ -1,6 +1,8 @@
 package com.fillkie.security.config;
 
 import com.fillkie.security.config.interceptor.BearerAuthInterceptor;
+import com.fillkie.security.config.interceptor.DeleteTeamPermissionInterceptor;
+import com.fillkie.security.config.interceptor.DeleteUsersPermissionInterceptor;
 import com.fillkie.security.config.interceptor.InviteUserPermissionInterceptor;
 import com.fillkie.security.config.interceptor.RefreshAuthInterceptor;
 import com.fillkie.security.config.interceptor.UpdatePermissionInterceptor;
@@ -27,6 +29,8 @@ public class AppConfig implements WebMvcConfigurer {
   private final RefreshAuthInterceptor refreshAuthInterceptor;
   private final UpdatePermissionInterceptor updatePermissionInterceptor;
   private final InviteUserPermissionInterceptor inviteUserPermissionInterceptor;
+  private final DeleteUsersPermissionInterceptor deleteUsersPermissionInterceptor;
+  private final DeleteTeamPermissionInterceptor deleteTeamPermissionInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
@@ -49,5 +53,11 @@ public class AppConfig implements WebMvcConfigurer {
         .order(3)
         .addPathPatterns("/team/invite/**")
         .excludePathPatterns("/team/invite/validation", "/team/invite/accept");
+    registry.addInterceptor(deleteUsersPermissionInterceptor)
+        .order(4)
+        .addPathPatterns("/permission/delete/**");
+    registry.addInterceptor(deleteTeamPermissionInterceptor)
+        .order(5)
+        .addPathPatterns("/team/delete/**");
   }
 }

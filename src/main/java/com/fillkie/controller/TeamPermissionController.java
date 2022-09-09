@@ -103,10 +103,10 @@ public class TeamPermissionController {
 //
 //    }
 
-    @PostMapping("delete/user")
-    public ResponseEntity<? extends DefaultResponse> deleteUsersTeam(@RequestBody @Valid
+    @PostMapping("delete/users/{teamId}")
+    public ResponseEntity<? extends DefaultResponse> deleteUsersTeam(@PathVariable @Valid String teamId, @RequestBody @Valid
     List<DeleteTeamUsersReqDto> deleteTeamUserReqDto){
-        String result = teamPermissionService.deleteTeamUsers(deleteTeamUserReqDto);
+        String result = teamPermissionService.deleteTeamUsers(teamId, deleteTeamUserReqDto);
 
         return ResponseEntity
             .status(HttpStatus.OK)
