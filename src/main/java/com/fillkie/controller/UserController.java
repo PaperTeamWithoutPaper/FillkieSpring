@@ -1,10 +1,12 @@
 package com.fillkie.controller;
 
 
+import com.fillkie.controller.requestDto.TestAccountReqDto;
 import com.fillkie.controller.response.DefaultResponse;
 import com.fillkie.controller.response.ResponseSuccess;
 import com.fillkie.controller.response.TokenResponse;
 import com.fillkie.controller.responseDto.RefreshTokenResDto;
+import com.fillkie.controller.responseDto.UserTestAccountResDto;
 import com.fillkie.security.advice.exception.TokenEmptyException;
 import com.fillkie.security.config.CustomConfig;
 import com.fillkie.security.permission.TeamPermission;
@@ -98,5 +100,18 @@ public class UserController {
 //    log.info("GET_URL : {}", GET_URL);
     System.out.println(teamPermission.INVITE_USER);
     return String.valueOf(teamPermission.DELETE_USER);
+  }
+
+  /**
+   * Test 계정 저장
+   */
+  @GetMapping("/test/account")
+  public ResponseEntity<? extends DefaultResponse> testAccount(TestAccountReqDto testAccountReqDto){
+    String email = testAccountReqDto.getEmail();
+    UserTestAccountResDto userTestAccountResDto = userService.testAccountToken(email);
+
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(new ResponseSuccess<UserTestAccountResDto>(true, HttpStatus.OK.value(), "Test 계정 토큰!", userTestAccountResDto));
   }
 }

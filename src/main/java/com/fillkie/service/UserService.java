@@ -1,5 +1,7 @@
 package com.fillkie.service;
 
+import com.fillkie.controller.requestDto.TestAccountReqDto;
+import com.fillkie.controller.responseDto.UserTestAccountResDto;
 import com.fillkie.security.advice.exception.UserNotFoundException;
 import com.fillkie.security.config.jwt.JwtTokenProvider;
 import com.fillkie.controller.responseDto.TeamListResDto;
@@ -112,6 +114,14 @@ public class UserService {
     user.setAccessToken(oAuthToken.getAccessToken());
     user.setRefreshToken(oAuthToken.getRefreshToken());
     userRepository.save(user);
+  }
+
+  /**
+   * Test Account Service
+   */
+  public UserTestAccountResDto testAccountToken(String email){
+    User user = userRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+    return new UserTestAccountResDto(jwtTokenProvider.createAccessToken(user.getId(), user.getEmail()), user.getAccessToken());
   }
 
 }
