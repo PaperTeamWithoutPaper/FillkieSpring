@@ -117,6 +117,9 @@ public class TeamController {
 //        }
     }
 
+    /**
+     * Read team list for main page
+     */
     @GetMapping("list")
     public ResponseEntity<? extends DefaultResponse> readListTeam(HttpServletRequest request){
 
@@ -129,6 +132,9 @@ public class TeamController {
             .body(new ResponseSuccess<List<TeamListResDto>>(true, HttpStatus.OK.value(), "팀 리스트!", teamList));
     }
 
+    /**
+     * Read team details for clicking specific team in main page
+     */
     @GetMapping("detail")
     public ResponseEntity<? extends DefaultResponse> readDetailTeam(@RequestParam("teamId") String teamId){
 

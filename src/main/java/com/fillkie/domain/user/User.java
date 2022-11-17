@@ -53,6 +53,10 @@ public class User {
     this.google.setAccessToken(accessToken);
   }
 
+  public String getAccessToken(){
+    return this.google.getAccessToken();
+  }
+
   public void setRefreshToken(String refreshToken) {
     this.google.setRefreshToken(refreshToken);
   }
